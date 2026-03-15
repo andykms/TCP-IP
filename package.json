@@ -1,0 +1,27 @@
+{
+  "name": "tcp-ip",
+  "version": "1.0.0",
+  "description": "программа утилита для TCP подключений",
+  "homepage": "https://github.com/andykms/TCP-IP#readme",
+  "bugs": {
+    "url": "https://github.com/andykms/TCP-IP/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andykms/TCP-IP.git"
+  },
+  "license": "ISC",
+  "author": "andrey isaev",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@angular/cli": "^21.2.2",
+    "concurrently": "^9.2.1",
+    "electron": "^41.0.2",
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.4"
+  }
+}
