@@ -1,0 +1,4 @@
+@for(i of configurations(); track $index) {
+  <hercules-tcp-client-configuration [canRemoveConfiguration]="$index > 0" [connectionId]="$index.toString()" (addConfiguration)="onAddConfiguration()" (removeConfiguration)="onRemoveConfiguration()">
+  </hercules-tcp-client-configuration>
+}

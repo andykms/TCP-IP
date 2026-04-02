@@ -1,0 +1,51 @@
+.hercules-button {
+  cursor: pointer;
+  border: none;
+}
+
+.hercules-button-primary {
+  background-color: var(--primary-color);
+  color: var(--main-text-color);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hercules-button-secondary {
+  background-color: inherit;
+  border: 1px solid var(--main-text-color);
+  border-radius: 5px;
+  padding: 3px 5px;
+  color: var(--main-text-color);
+  transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+}
+
+.hercules-button-secondary:hover {
+  border-color: var(--subtext-color);
+  color: var(--subtext-color);
+}
+
+.hercules-button-tertiary {
+  background-color: inherit;
+  border: none;
+}
+
+.hercules-button-ok {
+  background-color: var(--ok-color);
+  border: 1px solid var(--ok-text-color);
+  color: var(--ok-text-color);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hercules-button:disabled:not(.hercules-button-tertiary) {
+  cursor: auto;
+  border: 1px solid var(--main-text-color);
+  background-color: var(--disabled-color);
+  color: var(--subtext-color);
+}
+
+.hercules-button-tertiary:disabled {
+  cursor: auto;
+  border: none;
+  color: var(--subtext-color);
+}

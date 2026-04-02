@@ -1,0 +1,51 @@
+.hercules-text-main {
+  color: var(--main-text-color);
+}
+
+.hercules-text-sub {
+  color: var(--subtext-color);
+}
+
+.hercules-text-ok {
+  color: var(--ok-text-color);
+}
+
+.hercules-text-warning {
+  color: var(--warning-text-color);
+}
+
+.hercules-text-danger {
+  color: var(--danger-text-color);
+}
+
+.hercules-text-neutral {
+  color: var(--neutral-text-color);
+}
+
+.hercules-text-primary {
+  color: var(--primary-color);
+}
+
+.hercules-text-small {
+  font-size: var(--small-font-size);
+}
+
+.hercules-text-medium {
+  font-size: var(--medium-font-size);
+}
+
+.hercules-text-large {
+  font-size: var(--large-font-size);
+}
+
+.hercules-text-hovered:hover {
+  text-decoration: underline;
+}
+
+.hercules-text-bold {
+  font-weight: bold;
+}
+
+.hercules-text-thin {
+  font-weight:lighter;
+}

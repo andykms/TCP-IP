@@ -1,0 +1,69 @@
+<section class="configuration">
+  <div class="header">
+    <span herculesText [texttype]="'sub'" size="medium" class="header">TCP конфигурация</span>
+  </div>
+  <nav class="tabs">
+    <button
+      herculesButton
+      buttonType="tertiary"
+      (click)="setActiveTab(tabs.MANUAL_SETTING)"
+      [disabled]="isDisabledTab(tabs.MANUAL_SETTING)"
+    >
+      <span
+        [class]="tabClass(tabs.MANUAL_SETTING)"
+        herculesText
+        [texttype]="tabType(tabs.MANUAL_SETTING)"
+        size="large"
+        >Ручная настройка
+      </span>
+    </button>
+    <button
+      herculesButton
+      buttonType="tertiary"
+      (click)="setActiveTab(tabs.DEVICE_SEARCH)"
+      [disabled]="isDisabledTab(tabs.DEVICE_SEARCH)"
+    >
+      <span
+        [class]="tabClass(tabs.DEVICE_SEARCH)"
+        herculesText
+        [texttype]="tabType(tabs.DEVICE_SEARCH)"
+        size="large"
+        >Поиск устройств</span
+      >
+    </button>
+    <button
+      herculesButton
+      buttonType="tertiary"
+      (click)="setActiveTab(tabs.SAVED_CONFIGURATIONS)"
+      [disabled]="isDisabledTab(tabs.SAVED_CONFIGURATIONS)"
+    >
+      <span
+        [class]="tabClass(tabs.SAVED_CONFIGURATIONS)"
+        herculesText
+        [texttype]="tabType(tabs.SAVED_CONFIGURATIONS)"
+        size="large"
+        >Сохраненные конфигурации</span
+      >
+    </button>
+  </nav>
+  <div [class]="getClassContent(tabs.MANUAL_SETTING)">
+    <hercules-manual-setting
+      [status]="status()"
+      (connect)="onConnect($event)"
+      (disconnect)="onDisconnect()"
+      (addConfiguration)="onAddConfiguration()"
+    ></hercules-manual-setting
+    >;
+  </div>
+  <div [class]="getClassContent(tabs.DEVICE_SEARCH)"><hercules-device-search></hercules-device-search>;</div>
+  <div [class]="getClassContent(tabs.SAVED_CONFIGURATIONS)"><hercules-saved-configurations></hercules-saved-configurations>;</div>
+  @if (canRemoveConfiguration()) {
+    <button 
+      herculesButton
+      buttonType="tertiary"
+      (click)="onRemoveConfiguration()"
+      >
+    <img src="/images/close.svg" class="close" />
+    </button>
+  }
+</section>

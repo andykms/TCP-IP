@@ -1,0 +1,20 @@
+:root {
+  --theme-color: #242424;
+  --separator-color: #111111;
+  --primary-color: #FF6E00;
+  --primary-hover-color: #D05A00;
+  --main-text-color: #EEE1E1;
+  --subtext-color: #757575;
+  --disabled-color: #4D4D4D;
+  --neutral-text-color: #0069FF;
+  --ok-text-color: #1E8F00;
+  --warning-text-color: #FF6E00;
+  --warning-color: #805123;
+  --ok-color: #156300;
+  --danger-text-color: #FF0000;
+  --font: "Inter", sans-serif;
+  --code-font: "Roboto Mono", monospace;
+  --small-font-size: 10px;
+  --medium-font-size: 14px;
+  --large-font-size: 16px;
+}

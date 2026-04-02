@@ -1,0 +1,12 @@
+.hercules-toggle-button {
+  border: none;
+  background-color: var(--subtext-color);
+  padding: 3px 5px;
+  color: var(--main-text-color);
+  font-size: 10px;
+}
+
+.hercules-toggle-button-active {
+  background-color: var(--warning-color);
+  color: var(--warning-text-color);
+} 

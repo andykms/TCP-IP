@@ -15,11 +15,17 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:electron": "tsc",
+    "start:electron": "npm run build:electron && cross-env NODE_ENV=development electron ./dist/main.js",
+    "start:angular": "cd frontend && npm start",
+    "start": "concurrently \"npm run start:angular\" \"wait-on http://localhost:4200 && npm run start:electron\"",
+    "test-tcp-server": "node test-tcp-server/main.js"
   },
   "devDependencies": {
     "@angular/cli": "^21.2.2",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^41.0.2",
     "typescript": "^5.9.3",
     "wait-on": "^9.0.4"

@@ -1,0 +1,96 @@
+<section class="manual-setting">
+  <div class="main-form">
+    <form class="tcp-form" (ngSubmit)="onSubmitConnect()" [formGroup]="settingForm">
+      <div [class]="tcpLabelClasses">
+        <span herculesText [texttype]="status() === 'connected' ? 'ok' : 'primary'" size="medium"
+          >TCP</span
+        >
+      </div>
+      <label
+        class="tcp-input"
+        herculesInputContainer
+        size="medium"
+        placeholder="IP адрес:"
+        [disabled]="isDisabled"
+      >
+        <span herculesText texttype="sub" size="medium">IP:</span>
+        <input name="ip" formControlName="ip" minlength="1" maxlength="16" />
+      </label>
+      <label
+        class="tcp-input"
+        herculesInputContainer
+        size="medium"
+        placeholder="Порт:"
+        [disabled]="isDisabled"
+      >
+        <span herculesText texttype="sub" size="medium">Порт:</span>
+        <input name="port" formControlName="port" minlength="1" maxlength="16" />
+      </label>
+      <button
+        type="submit"
+        herculesButton
+        [buttonType]="buttonType()"
+        [disabled]="isButtonDisabled"
+      >
+        @if (status() === 'connected') {
+          <span>Подключено</span>
+        } @else if (status() === 'loading') {
+          <div class="loader">
+            <span class="load load1"></span>
+            <span class="load load2"></span>
+            <span class="load load3"></span>
+          </div>
+        } @else {
+          <span>Подключиться</span>
+        }
+      </button>
+    </form>
+    @if (this.status() === 'connected') {
+      <button herculesButton buttonType="tertiary" (click)="onSubmitDisconnect()">
+        <span herculesText size="medium" texttype="danger" [hovered]="true">Отключиться</span>
+      </button>
+    }
+  </div>
+  @if (status() === null) {
+    <div class="options">
+      <hercules-dropdown-content title="TEA авторизация">
+        <form class="tea-form" [formGroup]="teaAuthForm">
+          <label class="tea-input" herculesInputContainer size="medium" placeholder="1.">
+            <span herculesText texttype="sub" size="medium">1.</span>
+            <input name="teaAuth1" formControlName="1" />
+          </label>
+          <label class="tea-input" herculesInputContainer size="medium" placeholder="2.">
+            <span herculesText texttype="sub" size="medium">2.</span>
+            <input name="teaAuth2" formControlName="2" />
+          </label>
+          <label class="tea-input" herculesInputContainer size="medium" placeholder="3.">
+            <span herculesText texttype="sub" size="medium">3.</span>
+            <input name="teaAuth3" formControlName="3" />
+          </label>
+          <label class="tea-input" herculesInputContainer size="medium" placeholder="4.">
+            <span herculesText texttype="sub" size="medium">4.</span>
+            <input name="teaAuth4" formControlName="4" />
+          </label>
+        </form>
+      </hercules-dropdown-content>
+      <hercules-dropdown-content title="Код авторизации">
+        <form class="auth-form" [formGroup]="authCodeForm">
+          <label class="auth-code-input" herculesInputContainer size="medium" placeholder="Код:">
+            <span herculesText texttype="sub" size="medium">Код:</span>
+            <input name="authCode" formControlName="authCode" />
+          </label>
+        </form>
+      </hercules-dropdown-content>
+    </div>
+  }
+  @if(status() === 'connected') {
+    <div class="options">
+      <button herculesButton buttonType="secondary" size="medium">
+        Сохранить конфигурацию
+      </button>
+      <button herculesButton buttonType="secondary" size="medium" (click)="onAddConfiguration()">
+        Добавить подключение
+      </button>
+    </div>
+  }
+</section>

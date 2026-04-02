@@ -1,0 +1,9 @@
+<div [class]="dropdownClasses">
+  <div (click)="toggle()" class="dropdown">
+    <span herculesText [texttype]="textColor" size="medium">{{title()}}</span>
+    <hercules-arrow-button [type]="arrowColor" [orientation]="arrowOrientation" size="small"></hercules-arrow-button>
+  </div>
+  @if(opened()) {
+    <ng-content></ng-content>
+  }
+</div>

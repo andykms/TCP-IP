@@ -1,0 +1,23 @@
+.header {
+  inline-size: 100%;
+  padding: 17px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.main-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.active-link {
+  color: var(--primary-color);
+  text-decoration: underline;
+}

@@ -1,0 +1,50 @@
+.hercules-input-container {
+  border: 1px solid var(--main-text-color);
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  color: var(--subtext-color);
+}
+
+.hercules-input-container input {
+  border: none;
+  outline: none;
+  color: var(--main-text-color);
+  background-color: inherit;
+  inline-size: 100%
+}
+
+.hercules-input-container input:focus {
+  border: none;
+  outline: none;
+}
+
+.hercules-input-small {
+  border-radius: 4px;
+  font-size: var(--small-font-size);
+  padding: 3px;
+}
+
+.hercules-input-small input {
+  font-size: var(--small-font-size);
+}
+
+.hercules-input-medium {
+  border-radius: 10px;
+  font-size: var(--medium-font-size);
+  padding: 10px;
+}
+
+.hercules-input-medium input {
+  font-size: var(--medium-font-size);
+}
+
+.hercules-input-large {
+  border-radius: 12px;
+  font-size: var(--large-font-size);
+  padding: 12px;
+}
+
+.hercules-input-large input {
+  font-size: var(--large-font-size);
+}

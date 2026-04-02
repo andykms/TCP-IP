@@ -1,0 +1,19 @@
+.dropdown-content {
+  border-block-start: 1px solid var(--subtext-color);
+  inline-size: max-content;
+  cursor: pointer;
+}
+
+.dropdown-open {
+  border-block-start: 1px solid var(--main-text-color);
+}
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  flex-wrap: 1;
+  inline-size: 100%;
+  padding-block: 5px;
+}
