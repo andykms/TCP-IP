@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import * as collections from "./tcp-client.configurations.json";
+import { Injectable } from '@angular/core';
+import * as collections from './tcp-client.configurations.json';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class TcpClientConfigurationsService {
   getCollections() {

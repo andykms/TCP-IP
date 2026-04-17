@@ -41,9 +41,18 @@ const promises_1 = require("stream/promises");
 const CONNECTION_TIMEOUT = 15000;
 let mainWindow = null;
 const menu = electron_1.Menu.buildFromTemplate([
-    { label: 'View', submenu: [
-            { label: 'Toggle Developer Tools', accelerator: 'Ctrl+I', click: () => { mainWindow?.webContents.toggleDevTools(); } }
-        ] }
+    {
+        label: "View",
+        submenu: [
+            {
+                label: "Toggle Developer Tools",
+                accelerator: "Ctrl+I",
+                click: () => {
+                    mainWindow?.webContents.toggleDevTools();
+                },
+            },
+        ],
+    },
 ]);
 electron_1.Menu.setApplicationMenu(menu);
 function createWindow() {
@@ -51,19 +60,19 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
-            nodeIntegration: false
-        }
+            nodeIntegration: false,
+        },
     });
-    if (process.env.NODE_ENV === 'development') {
-        mainWindow.loadURL('http://localhost:4200');
+    if (process.env.NODE_ENV === "development") {
+        mainWindow.loadURL("http://localhost:4200");
         mainWindow.webContents.openDevTools();
     }
     else {
-        mainWindow.loadFile(path.join(__dirname, '../dist/frontend/index.html'));
+        mainWindow.loadFile(path.join(__dirname, "../dist/frontend/index.html"));
     }
-    mainWindow.on('closed', () => {
+    mainWindow.on("closed", () => {
         mainWindow = null;
     });
 }
@@ -71,12 +80,12 @@ electron_1.app.whenReady().then(() => {
     createWindow();
     setupIpcHandlers();
 });
-electron_1.app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+electron_1.app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
         electron_1.app.quit();
     }
 });
-electron_1.app.on('activate', () => {
+electron_1.app.on("activate", () => {
     if (electron_1.BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
@@ -104,7 +113,7 @@ function setupIpcHandlers() {
                     }
                     connections.delete(connectionId);
                 });
-                socket.on('close', () => {
+                socket.on("close", () => {
                     connections.delete(connectionId);
                     if (mainWindow) {
                         mainWindow.webContents.send("tcp:close", connectionId);
@@ -114,7 +123,7 @@ function setupIpcHandlers() {
             });
             socket.on("error", (err) => {
                 clearTimeout(timeout);
-                reject(err);
+                reject(err.message);
             });
         });
     });
@@ -146,7 +155,7 @@ function setupIpcHandlers() {
             const header = JSON.stringify({
                 type: "file",
                 name: fileName,
-                size: fileSize
+                size: fileSize,
             });
             connection.socket.write(header);
             const readStream = fs.createReadStream(filePath);
@@ -159,7 +168,7 @@ function setupIpcHandlers() {
     });
     electron_1.ipcMain.handle("dialog:openFile", async () => {
         const result = await electron_1.dialog.showOpenDialog(mainWindow, {
-            properties: ['openFile']
+            properties: ["openFile"],
         });
         if (!result.canceled && result.filePaths.length > 0) {
             return result.filePaths[0];

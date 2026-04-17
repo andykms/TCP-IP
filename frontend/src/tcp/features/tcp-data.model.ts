@@ -1,3 +1,5 @@
+import { Tcp } from './tcp.model';
+
 export enum TcpDataType {
   SEND = 'send',
   RECEIVE = 'receive',
@@ -5,7 +7,7 @@ export enum TcpDataType {
   ERROR = 'error',
 }
 
-export interface TcpData {
+export interface TcpData extends Tcp {
   connectionId: string;
   data: string;
   timestamp: Date;

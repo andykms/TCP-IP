@@ -1,0 +1,17 @@
+<div class="arrow">
+  <hercules-arrow-button
+    type="main"
+    size="small"
+    [orientation]="opened() ? 'up' : 'down'"
+    (onClick)="toggle()"
+  ></hercules-arrow-button>
+</div>
+@if (opened() && currentVariables().length > 0) {
+  <ul class="dropdown">
+    @for (variable of currentVariables(); track $index) {
+      <li (click)="choose(variable)" class="dropdown-element">
+        <span herculesText texttype="main" [size]="size()">{{ variable }}</span>
+      </li>
+    }
+  </ul>
+}

@@ -46,6 +46,10 @@
   font-weight: bold;
 }
 
+.hercules-text-light {
+  font-weight: 250;
+}
+
 .hercules-text-thin {
-  font-weight:lighter;
+  font-weight: lighter;
 }

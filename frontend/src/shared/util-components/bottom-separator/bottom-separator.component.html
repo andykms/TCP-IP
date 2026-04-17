@@ -1,0 +1,18 @@
+<article [class]="mainClasses" [style]="{ 'block-size': currHeight() }">
+  <div class="relative-container">
+    <div
+      class="mandatory"
+      herculesRowResize
+      (onResize)="changeHeight($event)"
+      (onBottomZone)="setBottomZone()"
+      (onTopZone)="setTopZone()"
+    ></div>
+    <div class="separator">
+      <span herculesText texttype="main" weight="bold">{{ label() }}</span>
+      <hercules-icon iconType="close" (iconClick)="setBottomZone()"></hercules-icon>
+    </div>
+    <section class="messages-body">
+      <ng-content></ng-content>
+    </section>
+  </div>
+</article>

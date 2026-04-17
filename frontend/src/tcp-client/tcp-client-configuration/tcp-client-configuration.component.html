@@ -1,6 +1,6 @@
 <section class="configuration">
   <div class="header">
-    <span herculesText [texttype]="'sub'" size="medium" class="header">TCP конфигурация</span>
+    <span herculesText [texttype]="'sub'" size="medium" class="header">{{ tcpLabel }}</span>
   </div>
   <nav class="tabs">
     <button
@@ -52,18 +52,17 @@
       (connect)="onConnect($event)"
       (disconnect)="onDisconnect()"
       (addConfiguration)="onAddConfiguration()"
-    ></hercules-manual-setting
-    >;
+    ></hercules-manual-setting>
   </div>
-  <div [class]="getClassContent(tabs.DEVICE_SEARCH)"><hercules-device-search></hercules-device-search>;</div>
-  <div [class]="getClassContent(tabs.SAVED_CONFIGURATIONS)"><hercules-saved-configurations></hercules-saved-configurations>;</div>
+  <div [class]="getClassContent(tabs.DEVICE_SEARCH)">
+    <hercules-device-search></hercules-device-search>;
+  </div>
+  <div [class]="getClassContent(tabs.SAVED_CONFIGURATIONS)">
+    <hercules-saved-configurations></hercules-saved-configurations>;
+  </div>
   @if (canRemoveConfiguration()) {
-    <button 
-      herculesButton
-      buttonType="tertiary"
-      (click)="onRemoveConfiguration()"
-      >
-    <img src="/images/close.svg" class="close" />
+    <button herculesButton buttonType="tertiary" (click)="onRemoveConfiguration()">
+      <img src="/images/close.svg" class="close" />
     </button>
   }
 </section>

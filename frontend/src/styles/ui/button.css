@@ -16,7 +16,9 @@
   border-radius: 5px;
   padding: 3px 5px;
   color: var(--main-text-color);
-  transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+  transition:
+    color 0.1s ease-in-out,
+    border-color 0.1s ease-in-out;
 }
 
 .hercules-button-secondary:hover {

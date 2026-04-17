@@ -1,19 +1,19 @@
-import { Component, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-export type TArrowButtonOrientation = "up" | "down";
-export type TArrowButtonSize = "small" | "medium" | "large";
-export type TArrowButtonType = "main" | "sub";
-
+export type TArrowButtonOrientation = 'up' | 'down';
+export type TArrowButtonSize = 'small' | 'medium' | 'large';
+export type TArrowButtonType = 'main' | 'sub';
 
 @Component({
-  selector: "hercules-arrow-button",
-  templateUrl: "./arrow-button.component.html",
-  styleUrls: ["./arrow-button.component.css"]
+  selector: 'hercules-arrow-button',
+  templateUrl: './arrow-button.component.html',
+  styleUrls: ['./arrow-button.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArrowButtonComponent {
-  public readonly type = input<TArrowButtonType>("main");
-  public readonly orientation = input<TArrowButtonOrientation>("up");
-  public readonly size = input<TArrowButtonSize>("medium");
+  public readonly type = input<TArrowButtonType>('main');
+  public readonly orientation = input<TArrowButtonOrientation>('up');
+  public readonly size = input<TArrowButtonSize>('medium');
 
   public readonly onClick = output<void>();
 

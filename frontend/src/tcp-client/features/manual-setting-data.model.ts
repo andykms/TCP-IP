@@ -6,6 +6,6 @@ export type ManualSettingData = {
     2: string;
     3: string;
     4: string;
-  }
+  };
   authCode?: string;
-}
+};

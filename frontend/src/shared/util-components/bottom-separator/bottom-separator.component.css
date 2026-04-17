@@ -1,0 +1,39 @@
+.messages {
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  inline-size: 100%;
+}
+
+.separator {
+  display: flex;
+  padding-inline: 30px;
+  justify-content: space-between;
+  align-items: center;
+  block-size: 20px;
+  background-color: var(--separator-color);
+  z-index: 2;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.messages-body {
+  background-color: var(--theme-color);
+  inline-size: 100%;
+}
+
+.relative-container {
+  block-size: 100%;
+  position: relative;
+}
+
+.mandatory {
+  block-size: 8px;
+  inline-size: 100%;
+  background-color: inherit;
+}
+
+.mandatory:hover {
+  border-bottom: 4px solid var(--primary-color);
+  cursor: s-resize;
+}

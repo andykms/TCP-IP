@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,10 +10,8 @@ import { HercInputDirective } from '../../shared/directives/input.directive';
 import { HercButtonDirective, HercButtonType } from '../../shared/directives/button.directive';
 import { HercTextDirective } from '../../shared/directives/text.directive';
 import { HerculesDropdownContentComponent } from '../../shared/ui/dropdown-content/dropdown-content.component';
-import { type ManualSettingData as TConnectOptions} from '../features/manual-setting-data.model';
+import { type ManualSettingData as TConnectOptions } from '../features/manual-setting-data.model';
 import { type TManualSettingStatus } from '../tcp-client-configuration/tcp-client-configuration.component';
-
-
 
 @Component({
   selector: 'hercules-manual-setting',
@@ -25,8 +23,9 @@ import { type TManualSettingStatus } from '../tcp-client-configuration/tcp-clien
     HercInputDirective,
     HercButtonDirective,
     HercTextDirective,
-    HerculesDropdownContentComponent
+    HerculesDropdownContentComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManualSettingComponent {
   public readonly status = input<TManualSettingStatus>(null);
@@ -35,7 +34,6 @@ export class ManualSettingComponent {
   protected readonly addConfiguration = output<void>();
 
   protected readonly settingForm: FormGroup;
-  protected readonly teaAuthForm: FormGroup;
   protected readonly authCodeForm: FormGroup;
 
   constructor(private readonly formBuilder: FormBuilder) {
@@ -50,13 +48,6 @@ export class ManualSettingComponent {
       port: ['', [Validators.required, Validators.pattern('^[0-9]{1,5}$')]],
     });
 
-    this.teaAuthForm = this.formBuilder.group({
-      1: ['', Validators.maxLength(64)],
-      2: ['', Validators.maxLength(64)],
-      3: ['', Validators.maxLength(64)],
-      4: ['', Validators.maxLength(64)],
-    });
-
     this.authCodeForm = this.formBuilder.group({
       authCode: ['', Validators.maxLength(512)],
     });
@@ -64,7 +55,7 @@ export class ManualSettingComponent {
 
   protected onSubmitConnect(): void {
     if (this.settingForm.valid) {
-      this.connect.emit({...this.settingForm.value, teaAuth: this.teaAuthForm.value, authCode: this.authCodeForm.value});
+      this.connect.emit({ ...this.settingForm.value, authCode: this.authCodeForm.value });
     }
   }
 
@@ -76,18 +67,18 @@ export class ManualSettingComponent {
     return this.status() === 'loading' || this.status() === 'connected';
   }
 
-  protected buttonType = computed<HercButtonType>(()=> {
+  protected buttonType = computed<HercButtonType>(() => {
     switch (this.status()) {
       case 'loading':
         return 'tertiary';
       case 'connected':
         return 'ok';
-      case "error":
-        return "primary";
+      case 'error':
+        return 'primary';
       default:
         return 'primary';
     }
-  })
+  });
 
   protected get isButtonDisabled(): boolean {
     return this.settingForm.invalid;

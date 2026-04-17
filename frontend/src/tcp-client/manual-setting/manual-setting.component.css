@@ -74,7 +74,7 @@
 }
 
 .load2 {
-  animation: spin2 1s infinite; 
+  animation: spin2 1s infinite;
 }
 
 .load3 {
@@ -103,7 +103,7 @@
   50% {
     transform: translateY(10px);
   }
-  
+
   100% {
     transform: translateY(0);
   }
@@ -117,7 +117,7 @@
   75% {
     transform: translateY(10px);
   }
-  
+
   100% {
     transform: translateY(0);
   }

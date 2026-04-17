@@ -1,4 +1,4 @@
 export interface Tcp {
-  ip: string;
+  host: string;
   port: number;
 }

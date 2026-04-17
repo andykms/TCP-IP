@@ -1,0 +1,50 @@
+.table {
+  inline-size: 100%;
+  border-collapse: unset;
+  position: relative;
+}
+
+.thead {
+  background-color: var(--separator-color);
+  block-size: 14px;
+  border-collapse: unset;
+  position: sticky;
+  top: 0;
+  inline-size: 100%;
+}
+
+.thead th {
+  text-align: start;
+}
+
+.tbodytr {
+  padding: 5px 30px;
+}
+
+td {
+  padding: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+th {
+  padding: 2px 5px;
+}
+
+.tbody > tr:nth-child(odd) {
+  background-color: var(--theme-color);
+}
+
+.tbody > tr {
+  cursor: pointer;
+}
+
+.tbody > tr:hover {
+  outline: 1px solid var(--main-text-color);
+  outline-offset: -1px;
+}
+
+tr:nth-child(even) {
+  background-color: var(--even-color);
+}
