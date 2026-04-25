@@ -1,5 +1,6 @@
 import { Directive, effect, ElementRef, input, OnInit, Renderer2 } from '@angular/core';
 
+export type HercInputType = 'base' | 'danger';
 @Directive({
   selector: '[herculesInputContainer]',
   host: {
@@ -10,6 +11,7 @@ export class HercInputDirective implements OnInit {
   public readonly size = input<'small' | 'medium' | 'large'>('medium');
   public readonly disabled = input<boolean>(false);
   public readonly class = input<string>('');
+  public readonly type = input<HercInputType>('base');
 
   private readonly disabledEffect = effect(() => {
     const inputElem = this.el.nativeElement.querySelector('input');
@@ -28,6 +30,7 @@ export class HercInputDirective implements OnInit {
   private setClasses() {
     const classes = [];
     classes.push('hercules-input-container');
+    classes.push(`hercules-input-container-${this.type()}`);
 
     switch (this.size()) {
       case 'small':

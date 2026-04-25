@@ -25,5 +25,9 @@ server.on("connection", (socket) => {
 }, 3000);
 });
 
+server.on("drop", (data) => {
+  console.log("Dropped data: " + data.toString());
+});
+
 
 

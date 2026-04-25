@@ -5,6 +5,7 @@ export enum TcpDataType {
   RECEIVE = 'receive',
   DISCONNECT = 'disconnect',
   ERROR = 'error',
+  CONNECT = 'connect',
 }
 
 export interface TcpData extends Tcp {

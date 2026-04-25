@@ -1,0 +1,40 @@
+<form class="form" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
+  <label herculesInputContainer size="small" placeholder="id подключения:" class="connection-id">
+    <span herculesText texttype="sub" size="small">iD:</span>
+    <input name="connectionId" formControlName="connectionId" maxlength="16" />
+    <hercules-hint-dropdown
+      [value]="connectionIdValue"
+      [variables]="connections()"
+      (onChoose)="onChooseConnection($event)"
+    ></hercules-hint-dropdown>
+  </label>
+  <label
+    herculesTextfieldContainer
+    size="medium"
+    placeholderTop="Напишите сообщение прямо тут!"
+    class="message-area"
+    resize="none"
+  >
+    <textarea name="data" formControlName="data"></textarea>
+  </label>
+  <div class="options">
+    <div class="formats">
+      <div>
+        <button herculesToggleButton [active]="isToggleHexActive" (click)="onClickSetHex()">
+          HEX формат
+        </button>
+        <input type="checkbox" name="format" formControlName="format" class="pseudo-input" />
+      </div>
+      <div>
+        <button herculesToggleButton [active]="isToggleAsciiActive" (click)="onClickSetAscii()">
+          ASCII формат
+        </button>
+        <input type="checkbox" name="format" formControlName="format" class="pseudo-input" />
+      </div>
+    </div>
+    <button herculesButton buttonType="primary" [disabled]="form.invalid" type="submit">
+      Отправить
+    </button>
+  </div>
+</form>

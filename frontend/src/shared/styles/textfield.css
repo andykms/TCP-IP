@@ -1,0 +1,72 @@
+.hercules-textfield-container {
+  position: relative;
+}
+
+.hercules-textfield-container textarea {
+  border: 1px solid var(--main-text-color);
+  border-radius: 5px;
+  background-color: inherit;
+  inline-size: 100%;
+  block-size: 100%;
+  z-index: 2;
+  color: var(--main-text-color);
+  padding: 5px;
+}
+
+.hercules-textfield-container textarea::placeholder {
+  color: var(--subtext-color);
+  font-weight: 400;
+  font-family: var(--font);
+}
+
+.hercules-textfield-container-small textarea::placeholder {
+  font-size: var(--small-font-size);
+}
+
+.hercules-textfield-container-medium textarea::placeholder {
+  font-size: var(--medium-font-size);
+}
+
+.hercules-textfield-container-large textarea::placeholder {
+  font-size: var(--large-font-size);
+}
+
+.hercules-textfield-container-disabled textarea {
+  border: 1px solid var(--subtext-color);
+  color: var(--subtext-color);
+}
+
+.hercules-textfield-container-small textarea {
+  font-size: var(--small-font-size);
+}
+
+.hercules-textfield-container-medium textarea {
+  font-size: var(--medium-font-size);
+}
+
+.hercules-textfield-container-large textarea {
+  font-size: var(--large-font-size);
+}
+
+.hercules-textfield-container-large > *:not(textarea) {
+  position: absolute;
+  inset-block-end: -5px;
+  inset-inline-end: -5px;
+  z-index: 3;
+}
+
+.hercules-textfield-container textarea:focus {
+  outline: none;
+}
+
+.hercules-textfield-container-resize-none textarea {
+  resize: none;
+}
+
+.hercules-textfield-container-resize-horizontal textarea {
+  resize: horizontal;
+}
+
+.hercules-textfield-container-resize-vertical textarea {
+  resize: vertical;
+}

@@ -35,10 +35,10 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
-const net = __importStar(require("net")); // для TCP-клиента
 const fs = __importStar(require("fs"));
-const promises_1 = require("stream/promises");
-const CONNECTION_TIMEOUT = 15000;
+const tcp_client_service_1 = require("./tcp-client/tcp-client.service");
+const format_model_1 = require("./features/format.model");
+const tcpClientService = new tcp_client_service_1.TcpClientService();
 let mainWindow = null;
 const menu = electron_1.Menu.buildFromTemplate([
     {
@@ -90,88 +90,51 @@ electron_1.app.on("activate", () => {
         createWindow();
     }
 });
-let connections = new Map();
 function setupIpcHandlers() {
     electron_1.ipcMain.handle("tcp:connect", async (event, connectionId, host, port) => {
-        return new Promise((resolve, reject) => {
-            const socket = new net.Socket();
-            const timeout = setTimeout(() => {
-                socket.destroy();
-                reject(new Error("Система: время подключения истекло"));
-            }, CONNECTION_TIMEOUT);
-            socket.connect(port, host, () => {
-                clearTimeout(timeout);
-                connections.set(connectionId, { socket, id: connectionId });
-                socket.on("data", (data) => {
-                    if (mainWindow) {
-                        mainWindow.webContents.send("tcp:data", connectionId, data.toString("utf8"));
-                    }
-                });
-                socket.on("error", (err) => {
-                    if (mainWindow) {
-                        mainWindow.webContents.send("tcp:error", connectionId, err.message);
-                    }
-                    connections.delete(connectionId);
-                });
-                socket.on("close", () => {
-                    connections.delete(connectionId);
-                    if (mainWindow) {
-                        mainWindow.webContents.send("tcp:close", connectionId);
-                    }
-                });
-                resolve({ success: true });
-            });
-            socket.on("error", (err) => {
-                clearTimeout(timeout);
-                reject(err.message);
-            });
+        const tcpConnection = await tcpClientService.connect(connectionId, host, port);
+        tcpConnection.addDataListener((data) => {
+            if (mainWindow) {
+                mainWindow.webContents.send("tcp:data", connectionId, data.toString("utf8"));
+            }
         });
-    });
-    electron_1.ipcMain.handle("tcp:send", async (event, connectionId, data) => {
-        const connection = connections.get(connectionId);
-        if (!connection) {
-            throw new Error("Система: подключение не найдено");
-        }
-        connection.socket.write(data);
+        tcpConnection.addErrorListener((err) => {
+            if (mainWindow) {
+                mainWindow.webContents.send("tcp:error", connectionId, err.message);
+            }
+        });
+        tcpConnection.addCloseListener(() => {
+            if (mainWindow) {
+                mainWindow.webContents.send("tcp:close", connectionId);
+            }
+        });
         return { success: true };
     });
+    electron_1.ipcMain.handle("tcp:send", async (event, connectionId, data, format = format_model_1.Format.UTF_8) => await tcpClientService.sendData(connectionId, data, format));
     electron_1.ipcMain.handle("tcp:disconnect", async (event, connectionId) => {
-        const connection = connections.get(connectionId);
-        if (connection) {
-            connection.socket.destroy();
-            connections.delete(connectionId);
-        }
-        return { success: true };
+        tcpClientService.disconnect(connectionId);
     });
-    electron_1.ipcMain.handle("tcp:sendFile", async (event, connectionId, filePath) => {
-        const connection = connections.get(connectionId);
-        if (!connection) {
-            throw new Error("Система: подключение не найдено");
-        }
-        try {
-            const stats = await fs.promises.stat(filePath);
-            const fileName = path.basename(filePath);
-            const fileSize = stats.size;
-            const header = JSON.stringify({
-                type: "file",
-                name: fileName,
-                size: fileSize,
-            });
-            connection.socket.write(header);
-            const readStream = fs.createReadStream(filePath);
-            await (0, promises_1.pipeline)(readStream, connection.socket, { end: false });
-            return { success: true, fileName, fileSize };
-        }
-        catch (err) {
-            throw err;
-        }
-    });
+    electron_1.ipcMain.handle("tcp:sendFile", async (event, connectionId, filePath) => await tcpClientService.sendFile(connectionId, filePath));
     electron_1.ipcMain.handle("dialog:openFile", async () => {
         const result = await electron_1.dialog.showOpenDialog(mainWindow, {
             properties: ["openFile"],
         });
         if (!result.canceled && result.filePaths.length > 0) {
-            return result.filePaths[0];
+            const filePath = result.filePaths[0];
+            try {
+                const stats = await fs.promises.stat(filePath);
+                const fileName = path.basename(filePath);
+                const fileSize = stats.size;
+                const fileInfo = {
+                    name: fileName,
+                    size: fileSize,
+                    path: filePath,
+                };
+                return fileInfo;
+            }
+            catch (err) {
+                throw err;
+            }
         }
         return null;
     });

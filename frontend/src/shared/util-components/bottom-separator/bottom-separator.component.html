@@ -8,8 +8,21 @@
       (onTopZone)="setTopZone()"
     ></div>
     <div class="separator">
-      <span herculesText texttype="main" weight="bold">{{ label() }}</span>
-      <hercules-icon iconType="close" (iconClick)="setBottomZone()"></hercules-icon>
+      <nav class="tabs">
+        @for (label of tabs(); track $index) {
+          <span
+            herculesText
+            [texttype]="activeTab() === label ? 'primary' : 'main'"
+            weight="bold"
+            (click)="onSetTab(label)"
+            >{{ label }}</span
+          >
+        }
+      </nav>
+      <div class="options">
+        <hercules-icon iconType="full-screen" (iconClick)="setFullScreen()"></hercules-icon>
+        <hercules-icon iconType="close" (iconClick)="setBottomZone()"></hercules-icon>
+      </div>
     </div>
     <section class="messages-body">
       <ng-content></ng-content>

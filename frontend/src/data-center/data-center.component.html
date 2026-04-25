@@ -1,0 +1,20 @@
+<hercules-bottom-separator
+  [tabs]="[messagesTab, sendMessageTab, sendFileTab]"
+  [activeTab]="activeTab()"
+  (tabClick)="onSetTab($event)"
+>
+  <div [style]="{ display: activeTab() === messagesTab ? 'block' : 'none', 'block-size': '100%' }">
+    <hercules-messages
+      [messages]="messages()"
+      [ips]="ips()"
+      [ports]="ports()"
+      [connectionIds]="connectionIds()"
+      ,
+    ></hercules-messages>
+  </div>
+  <div
+    [style]="{ display: activeTab() === sendMessageTab ? 'block' : 'none', 'block-size': '100%' }"
+  >
+    <hercules-send-message></hercules-send-message>
+  </div>
+</hercules-bottom-separator>

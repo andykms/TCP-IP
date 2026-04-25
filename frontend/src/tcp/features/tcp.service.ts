@@ -1,15 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, catchError, from, of, switchMap, throwError } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  Subject,
+  catchError,
+  finalize,
+  from,
+  merge,
+  of,
+  switchMap,
+  throwError,
+} from 'rxjs';
 import { type TcpData, TcpDataType } from './tcp-data.model';
 import { type Tcp } from './tcp.model';
+import { MessageFormat } from './message-format.model';
 
 declare global {
   interface Window {
     electronAPI: {
       connect: (connectionId: string, host: string, port: number) => Promise<any>;
-      send: (connectionId: string, data: string) => Promise<any>;
+      send: (connectionId: string, data: string, format: MessageFormat) => Promise<any>;
+      sendFile: (connectionId: string, filePath: string) => Promise<any>;
       disconnect: (connectionId: string) => Promise<any>;
-      openFileDialog: () => Promise<void>;
+      openFileDialog: () => Promise<{ name: string; path: string; size: number }>;
       onData: (callback: (connectionId: string, data: string) => void) => void;
       onError: (callback: (connectionId: string, error: string) => void) => void;
       onClose: (callback: (connectionId: string) => void) => void;
@@ -94,9 +107,12 @@ export class TcpService {
     });
   }
 
-  connect(host: string, port: number): Observable<{ connectionId: string }> {
+  connect(
+    host: string,
+    port: number,
+  ): Observable<{ connectionId: string; host: string; port: number; status: TcpDataType }> {
     const connectionId = this.connectionId.toString();
-    return from(window.electronAPI.connect(connectionId, host, port)).pipe(
+    const connectionObserver = from(window.electronAPI.connect(connectionId, host, port)).pipe(
       catchError((error) => {
         this.dataSubject.next({
           connectionId,
@@ -114,13 +130,54 @@ export class TcpService {
         this.ipsSubject.next(host);
         this.portsSubject.next(port);
         this.connectionIdSubject.next(connectionId);
-        return of({ connectionId });
+        return of({ connectionId, host, port, status: TcpDataType.CONNECT });
       }),
     );
+
+    const disconnectObservable = new Observable<{
+      connectionId: string;
+      host: string;
+      port: number;
+      status: TcpDataType;
+    }>((observer) => {
+      this.dataSubject.subscribe((data) => {
+        if (data.connectionId === connectionId && data.type === TcpDataType.DISCONNECT) {
+          observer.next({ connectionId, host, port, status: TcpDataType.DISCONNECT });
+        }
+      });
+    });
+
+    return merge(connectionObserver, disconnectObservable);
   }
 
-  send(connectionId: string, data: string): Observable<void> {
-    return from(window.electronAPI.send(connectionId, data));
+  send(
+    connectionId: string,
+    data: string,
+    format: MessageFormat = MessageFormat.UTF_8,
+  ): Observable<void> {
+    return from(window.electronAPI.send(connectionId, data, format)).pipe(
+      catchError((error) => {
+        this.dataSubject.next({
+          connectionId,
+          data: `Не удалось отправить данные: ${error}`,
+          timestamp: new Date(),
+          type: TcpDataType.ERROR,
+          host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
+          port: this.connections.get(connectionId)?.port ?? -1,
+        });
+        return throwError(error);
+      }),
+      finalize(() => {
+        this.dataSubject.next({
+          connectionId,
+          data: `Сообщение: "${data}" отправлено успешно`,
+          timestamp: new Date(),
+          type: TcpDataType.SEND,
+          host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
+          port: this.connections.get(connectionId)?.port ?? -1,
+        });
+      }),
+    );
   }
 
   disconnect(connectionId: string): Observable<void> {
@@ -132,8 +189,35 @@ export class TcpService {
     return this.dataSubject.asObservable();
   }
 
-  openFileDialog(): Observable<void> {
+  openFileDialog(): Observable<{ name: string; path: string; size: number }> {
     return from(window.electronAPI.openFileDialog());
+  }
+
+  sendFile(connectionId: string, filePath: string): Observable<void> {
+    const subscription = from(window.electronAPI.sendFile(connectionId, filePath)).pipe(
+      catchError((error) => {
+        this.dataSubject.next({
+          connectionId,
+          data: `Не удалось отправить файл: ${error}`,
+          timestamp: new Date(),
+          type: TcpDataType.ERROR,
+          host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
+          port: this.connections.get(connectionId)?.port ?? -1,
+        });
+        return EMPTY;
+      }),
+      finalize(() => {
+        this.dataSubject.next({
+          connectionId,
+          data: `Файл: "${filePath}" отправлен успешно`,
+          timestamp: new Date(),
+          type: TcpDataType.SEND,
+          host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
+          port: this.connections.get(connectionId)?.port ?? -1,
+        });
+      }),
+    );
+    return subscription;
   }
 
   getIp(): Observable<string> {

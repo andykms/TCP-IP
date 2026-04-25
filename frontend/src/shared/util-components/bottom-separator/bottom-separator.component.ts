@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { HercTextDirective } from '../../directives/text.directive';
 import { HercRowResizeDirective } from '../../directives/row-resize.directive';
 import { IconComponent } from '../../ui/icon/icon.component';
@@ -12,10 +12,16 @@ import { IconComponent } from '../../ui/icon/icon.component';
 })
 export class HercBottomSeparatorComponent {
   protected readonly currHeight = signal('30px');
-  public readonly label = input<string>('');
+  public readonly tabs = input<string[]>([]);
+  public readonly activeTab = input<string>('');
+  protected readonly tabClick = output<string>();
 
   protected get mainClasses() {
     return `messages`;
+  }
+
+  protected onSetTab(tab: string) {
+    this.tabClick.emit(tab);
   }
 
   protected toggle(): void {}
@@ -29,6 +35,10 @@ export class HercBottomSeparatorComponent {
   }
 
   protected setTopZone() {
+    this.currHeight.set('100%');
+  }
+
+  protected setFullScreen() {
     this.currHeight.set('100%');
   }
 }

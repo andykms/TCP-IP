@@ -4,6 +4,7 @@
   gap: 3px;
   align-items: center;
   color: var(--subtext-color);
+  transition: 0.3s border-color ease-in-out;
 }
 
 .hercules-input-container input {
@@ -47,4 +48,8 @@
 
 .hercules-input-large input {
   font-size: var(--large-font-size);
+}
+
+.hercules-input-container-danger {
+  border-color: var(--danger-color);
 }

@@ -8,16 +8,17 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { TcpClientConfigurationComponent } from './tcp-client-configuration/tcp-client-configuration.component';
-import { MessagesComponent } from '../messages/messages.component';
+import { MessagesComponent } from '../data-center/messages/messages.component';
 import { TcpService } from '../tcp/features/tcp.service';
 import { TcpData } from '../tcp/features/tcp-data.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DataCenterComponent } from '../data-center/data-center.component';
 
 @Component({
   selector: 'hercules-tcp-client',
   templateUrl: './tcp-client.component.html',
   styleUrls: ['./tcp-client.component.css'],
-  imports: [TcpClientConfigurationComponent, MessagesComponent],
+  imports: [TcpClientConfigurationComponent, DataCenterComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TcpClientComponent implements OnInit {

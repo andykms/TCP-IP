@@ -1,0 +1,145 @@
+<div class="header">
+  <form class="filters" [formGroup]="form">
+    <div class="filters-main">
+      <span herculesText texttype="main" size="small">Фильтры:</span>
+      <div class="filter-options">
+        <div>
+          <button
+            herculesToggleButton
+            [active]="this.form.get('sended')?.value"
+            (click)="this.form.get('sended')?.setValue(!this.form.get('sended')?.value)"
+          >
+            Отправленные
+          </button>
+          <input type="checkbox" name="sended" formControlName="sended" class="pseudo-input" />
+        </div>
+        <div>
+          <button
+            herculesToggleButton
+            [active]="this.form.get('received')?.value"
+            (click)="this.form.get('received')?.setValue(!this.form.get('received')?.value)"
+          >
+            Полученные
+          </button>
+          <input type="checkbox" name="received" formControlName="received" class="pseudo-input" />
+        </div>
+        <div>
+          <button
+            herculesToggleButton
+            [active]="this.form.get('errors')?.value"
+            (click)="this.form.get('errors')?.setValue(!this.form.get('errors')?.value)"
+          >
+            Ошибки
+          </button>
+          <input type="checkbox" name="errors" formControlName="errors" class="pseudo-input" />
+        </div>
+        <div>
+          <button
+            herculesToggleButton
+            [active]="this.form.get('disconnections')?.value"
+            (click)="
+              this.form.get('disconnections')?.setValue(!this.form.get('disconnections')?.value)
+            "
+          >
+            Отключения
+          </button>
+          <input
+            type="checkbox"
+            name="disconnections"
+            formControlName="disconnections"
+            class="pseudo-input"
+          />
+        </div>
+      </div>
+      <div class="filter-configs">
+        <label herculesInputContainer size="small" placeholder="ip:" class="tcp-config">
+          <span herculesText texttype="sub" size="small">ip:</span>
+          <input name="ip" formControlName="ip" maxlength="16" />
+          <hercules-hint-dropdown
+            [value]="form.get('ip')?.value"
+            [variables]="ips()"
+            (onChoose)="form.get('ip')?.setValue($event)"
+          ></hercules-hint-dropdown>
+        </label>
+        <label herculesInputContainer size="small" placeholder="порт:" class="tcp-config">
+          <span herculesText texttype="sub" size="small">порт:</span>
+          <input name="port" formControlName="port" maxlength="16" />
+          <hercules-hint-dropdown
+            [value]="form.get('port')?.value"
+            [variables]="portString"
+            (onChoose)="form.get('port')?.setValue($event)"
+          ></hercules-hint-dropdown>
+        </label>
+        <label herculesInputContainer size="small" placeholder="id" class="tcp-config">
+          <span herculesText texttype="sub" size="small">iD:</span>
+          <input name="connectionId" formControlName="connectionId" maxlength="16" />
+          <hercules-hint-dropdown
+            [value]="form.get('connectionId')?.value"
+            [variables]="connectionIds()"
+            (onChoose)="form.get('connectionId')?.setValue($event)"
+          ></hercules-hint-dropdown>
+        </label>
+      </div>
+    </div>
+    <div class="filters-search">
+      <span herculesText texttype="main" size="small">Поиск: </span>
+      <label herculesInputContainer size="small" placeholder="id" class="search">
+        <input name="search" formControlName="search" maxlength="16" />
+      </label>
+    </div>
+  </form>
+</div>
+<div class="table-container" (scroll)="onScrollMessages($event)">
+  <table herculesTable>
+    <thead>
+      <tr>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-type">Тип:</th>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-ip">ip:</th>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-port">порт:</th>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-id">id:</th>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-time">Время:</th>
+        <th herculesText texttype="sub" size="medium" scope="col" class="table-message">
+          Сообщение:
+        </th>
+      </tr>
+    </thead>
+    <tbody id="table-tbody">
+      @for (message of filteredMessages(); track $index) {
+        <tr>
+          <td
+            scope="row"
+            herculesText
+            [texttype]="messageType(message.type)"
+            size="medium"
+            class="table-type"
+            weight="light"
+          >
+            {{ messageTypeText(message.type) }}
+          </td>
+          <td herculesText texttype="sub" size="medium" class="table-ip">{{ message.host }}</td>
+          <td herculesText texttype="sub" size="medium" class="table-port">{{ message.port }}</td>
+          <td herculesText texttype="sub" size="medium" class="table-id">
+            {{ message.connectionId }}
+          </td>
+          <td herculesText texttype="sub" size="medium" class="table-time">
+            {{ message.timestamp.toLocaleString() }}
+          </td>
+          <td herculesText texttype="main" size="medium" class="table-message" family="code">
+            {{ message.data }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  @if (filteredMessages().length === 0 && messages().length > 0) {
+    <div class="not-found-message">
+      <span herculesText texttype="sub" size="medium">Ничего не найдено</span>
+    </div>
+  }
+  @if (messages().length <= 0) {
+    <div class="not-found-message">
+      <span herculesText texttype="sub" size="medium">Сообщений нет</span>
+    </div>
+  }
+  <div class="empty-fill-table"></div>
+</div>
