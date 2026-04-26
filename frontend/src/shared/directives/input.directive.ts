@@ -1,22 +1,24 @@
-import { Directive, effect, ElementRef, input, OnInit, Renderer2 } from '@angular/core';
+import { Directive, effect, ElementRef, input, OnChanges, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 
+export type HercInputType = 'base' | 'danger';
 @Directive({
   selector: '[herculesInputContainer]',
   host: {
     '(change)': 'onChange($event)',
   },
 })
-export class HercInputDirective implements OnInit {
+export class HercInputDirective implements OnChanges {
   public readonly size = input<'small' | 'medium' | 'large'>('medium');
   public readonly disabled = input<boolean>(false);
   public readonly class = input<string>('');
+  public readonly inputType = input<HercInputType>('base');
 
   private readonly disabledEffect = effect(() => {
     const inputElem = this.el.nativeElement.querySelector('input');
     inputElem.color = this.disabled() ? 'var(--disabled-color)' : 'var(--main-text-color)';
   });
 
-  ngOnInit() {
+  ngOnChanges(): void {
     this.setClasses();
   }
 
@@ -28,6 +30,7 @@ export class HercInputDirective implements OnInit {
   private setClasses() {
     const classes = [];
     classes.push('hercules-input-container');
+    classes.push(`hercules-input-container-${this.inputType()}`);
 
     switch (this.size()) {
       case 'small':

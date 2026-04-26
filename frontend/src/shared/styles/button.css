@@ -41,7 +41,7 @@
 
 .hercules-button:disabled:not(.hercules-button-tertiary) {
   cursor: auto;
-  border: 1px solid var(--main-text-color);
+  outline: 1px solid var(--main-text-color);
   background-color: var(--disabled-color);
   color: var(--subtext-color);
 }

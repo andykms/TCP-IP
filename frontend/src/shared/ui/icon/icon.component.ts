@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
-export type TIconType = 'trash' | 'edit' | 'close';
+export type TIconType = 'trash' | 'edit' | 'close' | 'full-screen';
 
 @Component({
   selector: 'hercules-icon',

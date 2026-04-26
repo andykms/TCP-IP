@@ -1,11 +1,17 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+enum Format {
+  HEX = 'hex',
+  ASCII = 'ascii',
+  UTF_8 = 'utf-8'
+}
+
 export type TcpAPI = {
   connect: (connectionId: string, host: string, port: number) => Promise<any>;
-  send: (connectionId: string, data: string) => Promise<any>;
+  send: (connectionId: string, data: string, format: Format) => Promise<any>;
   sendFile: (connectionId: string, filePath: string) => Promise<any>;
   disconnect: (connectionId: string) => Promise<any>;
-  openFileDialog: () => Promise<void>;
+  openFileDialog: () => Promise<{ name: string, path: string , size: number }>;
   onData: (callback: (connectionId: string, data: string) => void) => void;
   onError: (callback: (connectionId: string, error: string) => void) => void;
   onClose: (callback: (connectionId: string) => void) => void;
@@ -14,7 +20,7 @@ export type TcpAPI = {
 
 contextBridge.exposeInMainWorld('electronAPI', {
   connect: (connectionId: string, host: string, port: number) => ipcRenderer.invoke('tcp:connect', connectionId, host, port),
-  send: (connectionId: string, data: string) => ipcRenderer.invoke('tcp:send', connectionId, data),
+  send: (connectionId: string, data: string, format: Format) => ipcRenderer.invoke('tcp:send', connectionId, data, format),
   sendFile: (connectionId: string, filePath: string) => ipcRenderer.invoke('tcp:sendFile', connectionId, filePath),
   disconnect: (connectionId: string) => ipcRenderer.invoke('tcp:disconnect', connectionId),
   openFileDialog: () => ipcRenderer.invoke('dialog:openFile'),

@@ -6,9 +6,10 @@
   >
   </hercules-tcp-client-configuration>
 }
-<hercules-messages
+<hercules-data-center
   [messages]="messages()"
   [ips]="ips()"
   [ports]="ports()"
   [connectionIds]="connectionIds()"
-></hercules-messages>
+  (sendMessage)="sendMessage($event)"
+></hercules-data-center>

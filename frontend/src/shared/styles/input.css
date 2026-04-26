@@ -48,3 +48,7 @@
 .hercules-input-large input {
   font-size: var(--large-font-size);
 }
+
+.hercules-input-container-danger {
+  border-color: var(--danger-text-color);
+}

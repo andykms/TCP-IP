@@ -20,6 +20,7 @@
 .messages-body {
   background-color: var(--theme-color);
   inline-size: 100%;
+  block-size: 100%;
 }
 
 .relative-container {
@@ -36,4 +37,19 @@
 .mandatory:hover {
   border-bottom: 4px solid var(--primary-color);
   cursor: s-resize;
+}
+
+.options {
+  display: flex;
+  gap: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 27px;
+  align-items: center;
+}
+
+.tabs > span {
+  cursor: pointer;
 }

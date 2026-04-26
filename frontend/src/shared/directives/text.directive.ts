@@ -10,6 +10,7 @@ export type THerculesTextType =
   | 'primary';
 export type THerculesTextSize = 'small' | 'medium' | 'large';
 export type THerculesTextWeight = 'bold' | 'normal' | 'thin' | 'light';
+export type THerculesTextFamily = 'inter' | 'code';
 
 @Directive({
   selector: '[herculesText]',
@@ -20,6 +21,7 @@ export class HercTextDirective implements OnInit, OnChanges {
   public readonly texttype = input<THerculesTextType>('main');
   public readonly size = input<THerculesTextSize>('medium');
   public readonly weight = input<THerculesTextWeight>('normal');
+  public readonly family = input<THerculesTextFamily>('inter');
 
   ngOnInit() {
     this.setClasses();
@@ -40,6 +42,7 @@ export class HercTextDirective implements OnInit, OnChanges {
     classes.push(`hercules-text-${this.texttype()}`);
     classes.push(`hercules-text-${this.size()}`);
     classes.push(`hercules-text-${this.weight()}`);
+    classes.push(`hercules-text-${this.family()}`);
     if (this.hovered()) {
       classes.push('hercules-text-hovered');
     }

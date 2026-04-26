@@ -1,21 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
-  effect,
   ElementRef,
   input,
   OnChanges,
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormsModule, FormGroup } from '@angular/forms';
-import { TcpData, TcpDataType } from '../tcp/features/tcp-data.model';
-import { HercTextDirective, THerculesTextType } from '../shared/directives/text.directive';
-import { HercToggleButtonDirective } from '../shared/directives/toggle-button.directive';
-import { HercBottomSeparatorComponent } from '../shared/util-components/bottom-separator/bottom-separator.component';
-import { HercInputDirective } from '../shared/directives/input.directive';
-import { HercHintDropdownComponent } from '../shared/ui/hint-dropdown/hint-dropdown.component';
-import { HercTableDirective } from '../shared/directives/table.directive';
+import { TcpData, TcpDataType } from '../../tcp/features/tcp-data.model';
+import { HercTextDirective, THerculesTextType } from '../../shared/directives/text.directive';
+import { HercToggleButtonDirective } from '../../shared/directives/toggle-button.directive';
+import { HercInputDirective } from '../../shared/directives/input.directive';
+import { HercHintDropdownComponent } from '../../shared/ui/hint-dropdown/hint-dropdown.component';
+import { HercTableDirective } from '../../shared/directives/table.directive';
 
 @Component({
   selector: 'hercules-messages',
@@ -26,7 +23,6 @@ import { HercTableDirective } from '../shared/directives/table.directive';
     FormsModule,
     HercTextDirective,
     HercToggleButtonDirective,
-    HercBottomSeparatorComponent,
     HercInputDirective,
     HercHintDropdownComponent,
     HercTableDirective,
@@ -141,9 +137,5 @@ export class MessagesComponent implements OnChanges {
 
   protected onScrollMessages(event: Event) {
     event.stopPropagation();
-
-    const scrollY = (event.target as HTMLElement).scrollTop;
-    const tableBodyElement = this.el.nativeElement.querySelector('#table-tbody');
-    console.log(scrollY, tableBodyElement.scrollHeight);
   }
 }

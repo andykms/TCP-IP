@@ -2,6 +2,10 @@
   color: var(--main-text-color);
 }
 
+.hercules-text-code {
+  font-family: var(--code-font);
+}
+
 .hercules-text-sub {
   color: var(--subtext-color);
 }

@@ -18,6 +18,7 @@ import { HercButtonDirective } from '../../shared/directives/button.directive';
 import { ManualSettingData } from '../features/manual-setting-data.model';
 import { catchError, EMPTY } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TcpDataType } from '../../tcp/features/tcp-data.model';
 
 export type TManualSettingStatus = 'loading' | 'connected' | 'error' | null;
 
@@ -87,8 +88,13 @@ export class TcpClientConfigurationComponent {
         }),
         takeUntilDestroyed(this.destroyRef$),
       )
-      .subscribe(({ connectionId }) => {
-        this.status.set('connected');
+      .subscribe(({ connectionId, status }) => {
+        if (status === TcpDataType.CONNECT) {
+          this.status.set('connected');
+        }
+        if (status === TcpDataType.DISCONNECT) {
+          this.status.set(null);
+        }
         this.connectionId.set(connectionId);
       });
   }
