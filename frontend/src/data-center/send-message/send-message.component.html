@@ -1,6 +1,6 @@
 <form class="form" (ngSubmit)="onSubmit()" [formGroup]="form">
   <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
-  <label herculesInputContainer size="small" placeholder="id подключения:" class="connection-id">
+  <label herculesInputContainer size="small" placeholder="id подключения:" class="connection-id" [inputType]="connectionIdType">
     <span herculesText texttype="sub" size="small">iD:</span>
     <input name="connectionId" formControlName="connectionId" maxlength="16" />
     <hercules-hint-dropdown

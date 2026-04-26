@@ -13,6 +13,8 @@ import { TcpService } from '../tcp/features/tcp.service';
 import { TcpData } from '../tcp/features/tcp-data.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataCenterComponent } from '../data-center/data-center.component';
+import { SendMessage } from '../data-center/features/send-message.model';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'hercules-tcp-client',
@@ -62,5 +64,11 @@ export class TcpClientComponent implements OnInit {
       .subscribe((newConnectionId) =>
         this.connectionIds.update((connectionIds) => [...connectionIds, newConnectionId]),
       );
+  }
+
+  protected sendMessage(message: SendMessage) {
+    this.tcpService.send(message.connectionId, message.data, message.format)
+    .pipe(distinctUntilChanged())  
+    .subscribe(()=>{})
   }
 }

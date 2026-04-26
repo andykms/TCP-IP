@@ -23,11 +23,13 @@ server.on("connection", (socket) => {
   const random = Math.floor(Math.random() * messages.length);
   socket.write(messages[random]);
 }, 3000);
+  socket.on("data", (data) => console.log(data.toString() + "\n", socket.address().address, socket.address().port, socket.id, "\n"))
 });
 
 server.on("drop", (data) => {
   console.log("Dropped data: " + data.toString());
 });
+
 
 
 

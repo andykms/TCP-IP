@@ -6,19 +6,14 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { HercInputDirective } from '../../shared/directives/input.directive';
+import { HercInputDirective, HercInputType } from '../../shared/directives/input.directive';
 import { HercHintDropdownComponent } from '../../shared/ui/hint-dropdown/hint-dropdown.component';
 import { HercToggleButtonDirective } from '../../shared/directives/toggle-button.directive';
 import { HercTextDirective } from '../../shared/directives/text.directive';
 import { HercTextfieldDirective } from '../../shared/directives/textfield.directive';
-import { MessageFormat } from '../../tcp/features/message-format.model';
 import { HercButtonDirective, HercButtonType } from '../../shared/directives/button.directive';
-
-type SendMessage = {
-  connectionId: string;
-  data: string;
-  format: MessageFormat;
-};
+import { SendMessage } from '../features/send-message.model';
+import { TcpService } from '../../tcp/features/tcp.service';
 
 @Component({
   selector: 'hercules-send-message',
@@ -84,5 +79,12 @@ export class SendMessageComponent {
 
   protected onChooseConnection(connectionId: string) {
     this.form.get('connectionId')?.setValue(connectionId);
+  }
+
+  protected get connectionIdType(): HercInputType {
+    const field = this.form.get("connectionId");
+    const type = field?.valid ? 'base': field?.touched ? 'danger' : 'base';
+    console.log(type);
+    return type;
   }
 }
