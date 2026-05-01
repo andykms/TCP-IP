@@ -66,7 +66,7 @@ export class TcpClientComponent implements OnInit {
       );
   }
 
-  protected sendMessage(message: SendMessage) {
+  protected onSendMessage(message: SendMessage) {
     this.tcpService.send(message.connectionId, message.data, message.format)
     .pipe(distinctUntilChanged())  
     .subscribe(()=>{})

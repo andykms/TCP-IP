@@ -9,6 +9,7 @@ import {
   merge,
   of,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
 import { type TcpData, TcpDataType } from './tcp-data.model';
@@ -165,9 +166,9 @@ export class TcpService {
           host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
           port: this.connections.get(connectionId)?.port ?? -1,
         });
-        return throwError(error);
+        return EMPTY;
       }),
-      finalize(() => {
+      tap(() => {
         this.dataSubject.next({
           connectionId,
           data: `Сообщение: "${data}" отправлено успешно`,

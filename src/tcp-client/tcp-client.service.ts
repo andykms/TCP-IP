@@ -67,7 +67,7 @@ export class TcpClientService {
     const buffer = Buffer.from(data, format);
 
     if (!connection) {
-      throw new Error("Система: подключение не найдено");
+      return Promise.reject(new Error("Система: подключение не найдено"));
     }
     const successfully = connection.getUnsafedSocket.write(buffer);
     if (successfully) return Promise.resolve({ success: true });
@@ -78,7 +78,7 @@ export class TcpClientService {
     const connection = this.connections.get(connectionId);
 
     if (!connection) {
-      throw new Error("Система: подключение не найдено");
+      return Promise.reject(new Error("Система: подключение не найдено"));
     }
 
     try {
@@ -95,9 +95,9 @@ export class TcpClientService {
       connection.getUnsafedSocket.write(header);
       const readStream = fs.createReadStream(filePath);
       await pipeline(readStream, connection.getUnsafedSocket, { end: false });
-      return { success: true, fileName, fileSize };
+      return Promise.resolve({ success: true, fileName, fileSize });
     } catch (err) {
-      throw err;
+      return Promise.reject(err);
     }
   }
 }

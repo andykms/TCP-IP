@@ -13,7 +13,7 @@
 .message-area {
   display: block;
   inline-size: 100%;
-  block-size: calc(100% - 120px);
+  block-size: calc(100% - 150px);
   background-color: var(--theme-color);
   z-index: 2;
   margin-block-end: 12px;

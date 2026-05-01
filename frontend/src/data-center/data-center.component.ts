@@ -34,4 +34,8 @@ export class DataCenterComponent {
   protected onSetTab(tab: string) {
     this.activeTab.set(tab);
   }
+
+  protected onSendMessage(message: SendMessage) {
+    this.sendMessage.emit(message);
+  }
 }
