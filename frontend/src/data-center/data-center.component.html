@@ -15,6 +15,6 @@
   <div
     [style]="{ display: activeTab() === sendMessageTab ? 'block' : 'none', 'block-size': '100%' }"
   >
-    <hercules-send-message (submitSend)="onSendMessage($event)"></hercules-send-message>
+    <hercules-send-message (submitSend)="onSendMessage($event)" [messageStatus]="messageStatus()"></hercules-send-message>
   </div>
 </hercules-bottom-separator>

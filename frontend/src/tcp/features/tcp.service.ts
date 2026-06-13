@@ -15,12 +15,13 @@ import {
 import { type TcpData, TcpDataType } from './tcp-data.model';
 import { type Tcp } from './tcp.model';
 import { MessageFormat } from './message-format.model';
+import { LoadingService } from '../../loading/features/loading.service';
 
 declare global {
   interface Window {
     electronAPI: {
       connect: (connectionId: string, host: string, port: number) => Promise<any>;
-      send: (connectionId: string, data: string, format: MessageFormat) => Promise<any>;
+      send: (connectionId: string, data: string, format: MessageFormat) => Promise<{ success: boolean }>;
       sendFile: (connectionId: string, filePath: string) => Promise<any>;
       disconnect: (connectionId: string) => Promise<any>;
       openFileDialog: () => Promise<{ name: string; path: string; size: number }>;
@@ -107,6 +108,8 @@ export class TcpService {
       });
     });
   }
+  
+
 
   connect(
     host: string,
@@ -141,10 +144,8 @@ export class TcpService {
       port: number;
       status: TcpDataType;
     }>((observer) => {
-      this.dataSubject.subscribe((data) => {
-        if (data.connectionId === connectionId && data.type === TcpDataType.DISCONNECT) {
-          observer.next({ connectionId, host, port, status: TcpDataType.DISCONNECT });
-        }
+      window.electronAPI.onClose((closedConnectionId: string)=> {
+        if(closedConnectionId === connectionId) observer.next({ connectionId, host, port, status: TcpDataType.DISCONNECT });
       });
     });
 
@@ -155,7 +156,7 @@ export class TcpService {
     connectionId: string,
     data: string,
     format: MessageFormat = MessageFormat.UTF_8,
-  ): Observable<void> {
+  ): Observable<{success: boolean}> {
     return from(window.electronAPI.send(connectionId, data, format)).pipe(
       catchError((error) => {
         this.dataSubject.next({

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 export type TIconType = 'trash' | 'edit' | 'close' | 'full-screen';
 
@@ -6,6 +6,7 @@ export type TIconType = 'trash' | 'edit' | 'close' | 'full-screen';
   selector: 'hercules-icon',
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
   public readonly iconType = input<TIconType>('edit');

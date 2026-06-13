@@ -8,13 +8,13 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { TcpClientConfigurationComponent } from './tcp-client-configuration/tcp-client-configuration.component';
-import { MessagesComponent } from '../data-center/messages/messages.component';
 import { TcpService } from '../tcp/features/tcp.service';
 import { TcpData } from '../tcp/features/tcp-data.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataCenterComponent } from '../data-center/data-center.component';
 import { SendMessage } from '../data-center/features/send-message.model';
-import { distinctUntilChanged } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY } from 'rxjs';
+import { MessageStatus } from '../data-center/send-message/send-message.component';
 
 @Component({
   selector: 'hercules-tcp-client',
@@ -30,6 +30,7 @@ export class TcpClientComponent implements OnInit {
   protected readonly ports = signal<number[]>([]);
   protected readonly connectionIds = signal<string[]>([]);
   protected readonly configurationsCount = signal(1);
+  protected readonly messageStatus = signal<MessageStatus>(null);
   protected readonly configurations = computed(() =>
     Array.from({ length: this.configurationsCount() }, (_, i) => i),
   );
@@ -67,8 +68,18 @@ export class TcpClientComponent implements OnInit {
   }
 
   protected onSendMessage(message: SendMessage) {
-    this.tcpService.send(message.connectionId, message.data, message.format)
-    .pipe(distinctUntilChanged())  
-    .subscribe(()=>{})
+    this.messageStatus.set('pending');
+    this.tcpService
+      .send(message.connectionId, message.data, message.format)
+      .pipe(
+        distinctUntilChanged(),
+        catchError(() => {
+          this.messageStatus.set('failed');
+          return EMPTY;
+        })
+      )
+      .subscribe(({ success }) => {
+        if (success) this.messageStatus.set("sended");
+      });
   }
 }

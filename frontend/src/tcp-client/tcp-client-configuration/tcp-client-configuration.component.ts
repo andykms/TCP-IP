@@ -95,6 +95,9 @@ export class TcpClientConfigurationComponent {
         if (status === TcpDataType.DISCONNECT) {
           this.status.set(null);
         }
+        if (status === TcpDataType.ERROR) {
+          this.status.set(null);
+        }
         this.connectionId.set(connectionId);
       });
   }

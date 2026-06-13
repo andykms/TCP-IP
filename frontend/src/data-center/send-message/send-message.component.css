@@ -13,10 +13,25 @@
 .message-area {
   display: block;
   inline-size: 100%;
-  block-size: calc(100% - 150px);
+  block-size: 100%;
   background-color: var(--theme-color);
   z-index: 2;
-  margin-block-end: 12px;
+}
+
+.formated-area {
+  inline-size: 25%;
+}
+
+.fields {
+  display: block;
+  inline-size: 100%;
+  inline-size: 100%;
+  block-size: calc(100% - 150px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 20px;
+  gap: 12px;
 }
 
 .pseudo-input {

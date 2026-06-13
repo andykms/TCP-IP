@@ -35,11 +35,7 @@
         @if (status() === 'connected') {
           <span>Подключено</span>
         } @else if (status() === 'loading') {
-          <div class="loader">
-            <span class="load load1"></span>
-            <span class="load load2"></span>
-            <span class="load load3"></span>
-          </div>
+          <hercules-loader></hercules-loader>
         } @else {
           <span>Подключиться</span>
         }

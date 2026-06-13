@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output, signal } from '@angu
 import { HercBottomSeparatorComponent } from '../shared/util-components/bottom-separator/bottom-separator.component';
 import { TcpData } from '../tcp/features/tcp-data.model';
 import { MessagesComponent } from './messages/messages.component';
-import { SendMessageComponent } from './send-message/send-message.component';
+import { MessageStatus, SendMessageComponent } from './send-message/send-message.component';
 import { SendMessage } from './features/send-message.model';
 
 enum Tabs {
@@ -24,6 +24,7 @@ export class DataCenterComponent {
   public ports = input<number[]>([]);
   public connectionIds = input<string[]>([]);
   protected sendMessage = output<SendMessage>();
+  public messageStatus = input<MessageStatus>(null);
 
   protected readonly messagesTab = Tabs.Messages;
   protected readonly sendMessageTab = Tabs.SendMessage;

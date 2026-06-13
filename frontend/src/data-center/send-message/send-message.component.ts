@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnChanges, OnInit, output, signal } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -11,9 +11,12 @@ import { HercHintDropdownComponent } from '../../shared/ui/hint-dropdown/hint-dr
 import { HercToggleButtonDirective } from '../../shared/directives/toggle-button.directive';
 import { HercTextDirective } from '../../shared/directives/text.directive';
 import { HercTextfieldDirective } from '../../shared/directives/textfield.directive';
-import { HercButtonDirective, HercButtonType } from '../../shared/directives/button.directive';
+import { HercButtonDirective } from '../../shared/directives/button.directive';
 import { SendMessage } from '../features/send-message.model';
 import { DataFormatService } from '../features/data-format.service';
+import { HercLoaderComponent } from '../../shared/ui/loader/loader.component';
+
+export type MessageStatus = "failed" | "sended" | "pending" | null;
 
 @Component({
   selector: 'hercules-send-message',
@@ -29,14 +32,34 @@ import { DataFormatService } from '../features/data-format.service';
     HercTextDirective,
     HercTextfieldDirective,
     HercButtonDirective,
+    HercLoaderComponent,
   ],
 })
-export class SendMessageComponent {
+export class SendMessageComponent implements OnChanges {
   protected form: FormGroup;
+  private readonly dataFormatService = inject(DataFormatService);
 
   public connections = signal<string[]>([]);
   protected submitSend = output<SendMessage>();
+  public messageStatus = input<MessageStatus>(null);
 
+  ngOnChanges() {
+    switch (this.messageStatus()) {
+      case null:
+        break;
+      case 'failed':
+        break;
+      case 'sended':
+        this.form.setValue({
+          data: '',
+          connectionId: '',
+          format: 'UTF-8',
+        });
+        break;
+      case 'pending':
+        break;
+    }
+  }
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       data: ['', Validators.required],
@@ -89,5 +112,21 @@ export class SendMessageComponent {
 
   protected get dataLength() {
     return this.form.get('data')?.value.length;
+  }
+
+  protected get isChoosenFormatHex() {
+    return this.form.get('format')?.value == 'HEX';
+  }
+
+  protected get isChoosenFormatAscii() {
+    return this.form.get('format')?.value == 'ASCII';
+  }
+
+  protected get dataHex() {
+    return this.dataFormatService.stringToHex(this.form.get('data')?.value);
+  }
+
+  protected get dataAscii() {
+    return this.dataFormatService.stringToAscii(this.form.get('data')?.value);
   }
 }
