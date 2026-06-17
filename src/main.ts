@@ -9,9 +9,13 @@ import {
 import * as path from "path";
 import * as fs from "fs";
 import { TcpClientService } from "./tcp-client/tcp-client.service";
+import { DeviceSearchService } from "./device-search/device-search.service";
+import { TcpServerService } from "./tcp-server/tcp-server.service";
 import { Format } from "./features/format.model";
 
 const tcpClientService = new TcpClientService();
+const deviceSearchService = new DeviceSearchService();
+let tcpServerService: TcpServerService;
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -72,6 +76,10 @@ app.on("activate", () => {
 });
 
 function setupIpcHandlers() {
+  tcpServerService = new TcpServerService((channel, ...args) => {
+    mainWindow?.webContents.send(channel, ...args);
+  });
+
   ipcMain.handle(
     "tcp:connect",
     async (
@@ -131,6 +139,48 @@ function setupIpcHandlers() {
     "tcp:sendFile",
     async (event: IpcMainInvokeEvent, connectionId: string, filePath: string) =>
       await tcpClientService.sendFile(connectionId, filePath)
+  );
+
+  ipcMain.handle(
+    "tcp:getConnections",
+    async () => tcpClientService.getConnections()
+  );
+
+  ipcMain.handle("device-search:search", async () =>
+    deviceSearchService.search()
+  );
+
+  ipcMain.handle(
+    "tcp-server:open",
+    async (
+      _event: IpcMainInvokeEvent,
+      serverId: string,
+      port: number
+    ) => tcpServerService.openServer(serverId, port)
+  );
+
+  ipcMain.handle(
+    "tcp-server:close",
+    async (_event: IpcMainInvokeEvent, serverId: string) =>
+      tcpServerService.closeServer(serverId)
+  );
+
+  ipcMain.handle(
+    "tcp-server:disconnect-client",
+    async (
+      _event: IpcMainInvokeEvent,
+      serverId: string,
+      clientId: string
+    ) => tcpServerService.disconnectClient(serverId, clientId)
+  );
+
+  ipcMain.handle(
+    "tcp-server:send-to-all",
+    async (
+      _event: IpcMainInvokeEvent,
+      data: string,
+      format: Format = Format.UTF_8
+    ) => tcpServerService.sendToAllClients(data, format)
   );
 
   ipcMain.handle("dialog:openFile", async () => {

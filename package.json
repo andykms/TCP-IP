@@ -29,5 +29,8 @@
     "electron": "^41.0.2",
     "typescript": "^5.9.3",
     "wait-on": "^9.0.4"
+  },
+  "dependencies": {
+    "node-netstat": "^1.9.0"
   }
 }

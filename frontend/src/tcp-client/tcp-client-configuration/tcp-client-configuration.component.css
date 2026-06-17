@@ -33,3 +33,7 @@
 .content-inactive {
   display: none;
 }
+
+.configuration {
+  margin-block-end: 37px;
+}

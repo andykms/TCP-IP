@@ -1,0 +1,4 @@
+.hercules-bordered-container {
+  border: 1px solid var(--main-text-color);
+  border-radius: 5px;
+}

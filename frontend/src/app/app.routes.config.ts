@@ -11,4 +11,9 @@ export const appRoutes: Routes = [
     loadComponent: () =>
       import('../tcp-client/tcp-client.component').then((m) => m.TcpClientComponent),
   },
+  {
+    path: 'tcp-server',
+    loadComponent: () =>
+      import('../tcp-server/tcp-server.component').then((m) => m.TcpServerComponent),
+  },
 ];

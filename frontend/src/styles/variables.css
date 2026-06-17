@@ -20,3 +20,17 @@
   --medium-font-size: 14px;
   --large-font-size: 16px;
 }
+
+.theme-light {
+  --theme-color: #ffffff;
+  --separator-color: #dbdbdb;
+  --even-color: #f5f5f5;
+  --primary-color: #ff6e00;
+  --primary-hover-color: #d05a00;
+  --main-text-color: #1f1f1f;
+  --subtext-color: #757575;
+  --hovered-theme: #1f1f1f;
+  --disabled-color: #4d4d4d;
+  --neutral-text-color: #0069ff;
+  --ok-text-color: #1e8f00;
+}

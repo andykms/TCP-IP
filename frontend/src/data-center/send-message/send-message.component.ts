@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnChanges, OnInit, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnChanges,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -7,7 +16,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { HercInputDirective, HercInputType } from '../../shared/directives/input.directive';
-import { HercHintDropdownComponent } from '../../shared/ui/hint-dropdown/hint-dropdown.component';
+import { HercListDropdownComponent } from '../../shared/ui/list-dropdown/list-dropdown.component';
 import { HercToggleButtonDirective } from '../../shared/directives/toggle-button.directive';
 import { HercTextDirective } from '../../shared/directives/text.directive';
 import { HercTextfieldDirective } from '../../shared/directives/textfield.directive';
@@ -15,8 +24,11 @@ import { HercButtonDirective } from '../../shared/directives/button.directive';
 import { SendMessage } from '../features/send-message.model';
 import { DataFormatService } from '../features/data-format.service';
 import { HercLoaderComponent } from '../../shared/ui/loader/loader.component';
+import { type TcpConnectionInfo } from '../features/tcp-connection-info.model';
+import { type DropdownListItem } from '../../shared/features/dropdown-list-item.model';
 
-export type MessageStatus = "failed" | "sended" | "pending" | null;
+export type MessageStatus = 'failed' | 'sended' | 'pending' | null;
+export type SendMessageMode = 'client' | 'server';
 
 @Component({
   selector: 'hercules-send-message',
@@ -27,7 +39,7 @@ export type MessageStatus = "failed" | "sended" | "pending" | null;
     ReactiveFormsModule,
     FormsModule,
     HercInputDirective,
-    HercHintDropdownComponent,
+    HercListDropdownComponent,
     HercToggleButtonDirective,
     HercTextDirective,
     HercTextfieldDirective,
@@ -39,9 +51,33 @@ export class SendMessageComponent implements OnChanges {
   protected form: FormGroup;
   private readonly dataFormatService = inject(DataFormatService);
 
-  public connections = signal<string[]>([]);
+  public mode = input<SendMessageMode>('client');
+  public connections = input<TcpConnectionInfo[]>([]);
   protected submitSend = output<SendMessage>();
   public messageStatus = input<MessageStatus>(null);
+
+  protected readonly connectionOptions = computed<DropdownListItem[]>(() =>
+    this.connections().map((connection, index) => ({
+      id: index,
+      label: `${connection.connectionId} (${connection.ip} ${connection.port})`,
+    })),
+  );
+
+  private readonly modeEffect = effect(() => {
+    const connectionIdControl = this.form.get('connectionId');
+    if (!connectionIdControl) {
+      return;
+    }
+
+    if (this.mode() === 'server') {
+      connectionIdControl.clearValidators();
+      connectionIdControl.setValue('');
+    } else {
+      connectionIdControl.setValidators(Validators.required);
+    }
+
+    connectionIdControl.updateValueAndValidity();
+  });
 
   ngOnChanges() {
     switch (this.messageStatus()) {
@@ -50,16 +86,21 @@ export class SendMessageComponent implements OnChanges {
       case 'failed':
         break;
       case 'sended':
-        this.form.setValue({
-          data: '',
-          connectionId: '',
-          format: 'UTF-8',
-        });
+        if (this.mode() === 'server') {
+          this.form.patchValue({ data: '', format: 'UTF-8' });
+        } else {
+          this.form.setValue({
+            data: '',
+            connectionId: '',
+            format: 'UTF-8',
+          });
+        }
         break;
       case 'pending':
         break;
     }
   }
+
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       data: ['', Validators.required],
@@ -68,14 +109,20 @@ export class SendMessageComponent implements OnChanges {
     });
   }
 
-  protected get dataSizeInBytes() {
-    return 0;
-  }
-
   protected onSubmit() {
-    if (this.form.valid) {
-      this.submitSend.emit(this.form.value);
+    if (!this.form.valid) {
+      return;
     }
+
+    if (this.mode() === 'server') {
+      this.submitSend.emit({
+        data: this.form.value.data,
+        format: this.form.value.format,
+      });
+      return;
+    }
+
+    this.submitSend.emit(this.form.value);
   }
 
   protected get isToggleHexActive() {
@@ -100,13 +147,18 @@ export class SendMessageComponent implements OnChanges {
     return this.form.get('connectionId')?.value;
   }
 
-  protected onChooseConnection(connectionId: string) {
-    this.form.get('connectionId')?.setValue(connectionId);
+  protected onChooseConnection(option: DropdownListItem) {
+    const connection = this.connections()[option.id];
+    if (!connection) {
+      return;
+    }
+
+    this.form.get('connectionId')?.setValue(connection.connectionId);
   }
 
   protected get connectionIdType(): HercInputType {
-    const field = this.form.get("connectionId");
-    const type = field?.valid ? 'base': field?.touched ? 'danger' : 'base';
+    const field = this.form.get('connectionId');
+    const type = field?.valid ? 'base' : field?.touched ? 'danger' : 'base';
     return type;
   }
 

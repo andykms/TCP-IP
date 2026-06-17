@@ -52,13 +52,20 @@
       (connect)="onConnect($event)"
       (disconnect)="onDisconnect()"
       (addConfiguration)="onAddConfiguration()"
+      [canAddConfiguration]="canAddConfiguration()"
     ></hercules-manual-setting>
   </div>
   <div [class]="getClassContent(tabs.DEVICE_SEARCH)">
-    <hercules-device-search></hercules-device-search>;
+    <hercules-device-search
+      [status]="status()"
+      (connect)="onConnect($event)"
+      (disconnect)="onDisconnect()"
+      (addConfiguration)="onAddConfiguration()"
+      [canAddConfiguration]="canAddConfiguration()"
+    ></hercules-device-search>
   </div>
   <div [class]="getClassContent(tabs.SAVED_CONFIGURATIONS)">
-    <hercules-saved-configurations></hercules-saved-configurations>;
+    <hercules-saved-configurations></hercules-saved-configurations>
   </div>
   @if (canRemoveConfiguration()) {
     <button herculesButton buttonType="tertiary" (click)="onRemoveConfiguration()">

@@ -70,16 +70,16 @@ export class TcpClientComponent implements OnInit {
   protected onSendMessage(message: SendMessage) {
     this.messageStatus.set('pending');
     this.tcpService
-      .send(message.connectionId, message.data, message.format)
+      .send(message.connectionId!, message.data, message.format)
       .pipe(
         distinctUntilChanged(),
         catchError(() => {
           this.messageStatus.set('failed');
           return EMPTY;
-        })
+        }),
       )
       .subscribe(({ success }) => {
-        if (success) this.messageStatus.set("sended");
+        if (success) this.messageStatus.set('sended');
       });
   }
 }

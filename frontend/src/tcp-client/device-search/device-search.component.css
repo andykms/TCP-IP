@@ -1,0 +1,58 @@
+.main-form {
+  display: flex;
+  inline-size: 100%;
+  padding-block: 37px;
+  gap: 10px;
+}
+
+.search-panel {
+  inline-size: 380px;
+  block-size: 350px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.search-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.ip-filter-input {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.table-wrapper {
+  flex: 1;
+  overflow: auto;
+  min-block-size: 0;
+}
+
+.search-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: 100%;
+}
+
+.selected-row {
+  outline: 1px solid var(--primary-color);
+  outline-offset: -1px;
+}
+
+.connect-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.options {
+  display: flex;
+  gap: 15px;
+}

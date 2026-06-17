@@ -1,7 +1,7 @@
-import { MessageFormat } from "../../tcp/features/message-format.model";
+import { MessageFormat } from '../../tcp/features/message-format.model';
 
 export type SendMessage = {
-  connectionId: string;
+  connectionId?: string;
   data: string;
   format: MessageFormat;
 };

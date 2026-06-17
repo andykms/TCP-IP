@@ -1,5 +1,5 @@
 <hercules-bottom-separator
-  [tabs]="[messagesTab, sendMessageTab, sendFileTab]"
+  [tabs]="[messagesTab, sendMessageTab, tcpConnectionsTab]"
   [activeTab]="activeTab()"
   (tabClick)="onSetTab($event)"
 >
@@ -9,12 +9,28 @@
       [ips]="ips()"
       [ports]="ports()"
       [connectionIds]="connectionIds()"
-      ,
     ></hercules-messages>
   </div>
   <div
     [style]="{ display: activeTab() === sendMessageTab ? 'block' : 'none', 'block-size': '100%' }"
   >
-    <hercules-send-message (submitSend)="onSendMessage($event)" [messageStatus]="messageStatus()"></hercules-send-message>
+    <hercules-send-message
+      [mode]="mode()"
+      [connections]="connections()"
+      (submitSend)="onSendMessage($event)"
+      [messageStatus]="messageStatus()"
+    ></hercules-send-message>
+  </div>
+  <div
+    [style]="{
+      display: activeTab() === tcpConnectionsTab ? 'block' : 'none',
+      'block-size': '100%',
+    }"
+  >
+    <hercules-tcp-connections
+      [mode]="tcpConnectionsMode"
+      [serverConnections]="serverConnections()"
+      (disconnectServerClient)="onDisconnectServerClient($event)"
+    ></hercules-tcp-connections>
   </div>
 </hercules-bottom-separator>

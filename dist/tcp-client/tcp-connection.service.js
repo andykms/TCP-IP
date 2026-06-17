@@ -37,6 +37,8 @@ exports.TcpConnectionService = void 0;
 const net = __importStar(require("net"));
 class TcpConnectionService {
     constructor(connectionId) {
+        this.host = "";
+        this.port = 0;
         this.dataListeners = [];
         this.errorListeners = [];
         this.closeListeners = [];
@@ -61,6 +63,8 @@ class TcpConnectionService {
         return this;
     }
     connect(port, host, listener) {
+        this.host = host;
+        this.port = port;
         this.socket.connect(port, host, listener);
     }
     addDataListener(listener) {

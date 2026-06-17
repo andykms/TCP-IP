@@ -37,8 +37,12 @@ const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const tcp_client_service_1 = require("./tcp-client/tcp-client.service");
+const device_search_service_1 = require("./device-search/device-search.service");
+const tcp_server_service_1 = require("./tcp-server/tcp-server.service");
 const format_model_1 = require("./features/format.model");
 const tcpClientService = new tcp_client_service_1.TcpClientService();
+const deviceSearchService = new device_search_service_1.DeviceSearchService();
+let tcpServerService;
 let mainWindow = null;
 const menu = electron_1.Menu.buildFromTemplate([
     {
@@ -91,6 +95,9 @@ electron_1.app.on("activate", () => {
     }
 });
 function setupIpcHandlers() {
+    tcpServerService = new tcp_server_service_1.TcpServerService((channel, ...args) => {
+        mainWindow?.webContents.send(channel, ...args);
+    });
     electron_1.ipcMain.handle("tcp:connect", async (event, connectionId, host, port) => {
         const tcpConnection = await tcpClientService.connect(connectionId, host, port);
         tcpConnection.addDataListener((data) => {
@@ -115,6 +122,12 @@ function setupIpcHandlers() {
         tcpClientService.disconnect(connectionId);
     });
     electron_1.ipcMain.handle("tcp:sendFile", async (event, connectionId, filePath) => await tcpClientService.sendFile(connectionId, filePath));
+    electron_1.ipcMain.handle("tcp:getConnections", async () => tcpClientService.getConnections());
+    electron_1.ipcMain.handle("device-search:search", async () => deviceSearchService.search());
+    electron_1.ipcMain.handle("tcp-server:open", async (_event, serverId, port) => tcpServerService.openServer(serverId, port));
+    electron_1.ipcMain.handle("tcp-server:close", async (_event, serverId) => tcpServerService.closeServer(serverId));
+    electron_1.ipcMain.handle("tcp-server:disconnect-client", async (_event, serverId, clientId) => tcpServerService.disconnectClient(serverId, clientId));
+    electron_1.ipcMain.handle("tcp-server:send-to-all", async (_event, data, format = format_model_1.Format.UTF_8) => tcpServerService.sendToAllClients(data, format));
     electron_1.ipcMain.handle("dialog:openFile", async () => {
         const result = await electron_1.dialog.showOpenDialog(mainWindow, {
             properties: ["openFile"],

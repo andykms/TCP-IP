@@ -73,9 +73,21 @@ class TcpClientService {
     }
     disconnect(connectionId) {
         if (this.connections.has(connectionId)) {
-            this.connections.get(connectionId).disconnect();
+            const connection = this.connections.get(connectionId);
+            // Important: remove from Map immediately. TcpConnectionService.disconnect()
+            // clears listeners before the socket 'close' event fires, so relying on
+            // close listeners to delete from this Map is not safe.
+            this.connections.delete(connectionId);
+            connection.disconnect();
             return { success: true };
         }
+    }
+    getConnections() {
+        return Array.from(this.connections.entries()).map(([connectionId, connection]) => ({
+            connectionId,
+            ip: connection.host,
+            port: connection.port,
+        }));
     }
     async sendData(connectionId, data, format = format_model_1.Format.UTF_8) {
         const connection = this.connections.get(connectionId);

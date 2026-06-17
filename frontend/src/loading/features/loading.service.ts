@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, finalize, Observable, ReplaySubject, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, finalize, Observable, ReplaySubject, Subject } from 'rxjs';
 
 export enum LoadingType {
   SEND_MESSAGE = 'SEND_MESSAGE',
@@ -7,7 +7,7 @@ export enum LoadingType {
 }
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class LoadingService {
   private isLoadingSendMessage = new Subject<boolean>();

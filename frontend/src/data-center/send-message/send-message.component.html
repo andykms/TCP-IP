@@ -1,20 +1,22 @@
 <form class="form" (ngSubmit)="onSubmit()" [formGroup]="form">
-  <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
-  <label
-    herculesInputContainer
-    size="small"
-    placeholder="id подключения:"
-    class="connection-id"
-    [inputType]="connectionIdType"
-  >
-    <span herculesText texttype="sub" size="small">iD:</span>
-    <input name="connectionId" formControlName="connectionId" maxlength="16" />
-    <hercules-hint-dropdown
-      [value]="connectionIdValue"
-      [variables]="connections()"
-      (onChoose)="onChooseConnection($event)"
-    ></hercules-hint-dropdown>
-  </label>
+  @if (mode() !== 'server') {
+    <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
+    <label
+      herculesInputContainer
+      size="small"
+      placeholder="id подключения:"
+      class="connection-id"
+      [inputType]="connectionIdType"
+    >
+      <span herculesText texttype="sub" size="small">iD:</span>
+      <input name="connectionId" formControlName="connectionId" maxlength="16" />
+      <hercules-list-dropdown
+        [value]="connectionIdValue"
+        [items]="connectionOptions()"
+        (onChoose)="onChooseConnection($event)"
+      ></hercules-list-dropdown>
+    </label>
+  }
   <div class="fields">
     <label
       herculesTextfieldContainer

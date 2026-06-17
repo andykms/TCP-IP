@@ -1,0 +1,30 @@
+.tcp-connections {
+  padding: 10px 30px;
+  background-color: var(--theme-color);
+  block-size: 100%;
+}
+
+.header {
+  margin-block-end: 12px;
+}
+
+.table-wrapper {
+  inline-size: 67%;
+  position: absolute;
+  left: 30px;
+  block-size: calc(100% - 100px);
+  overflow-y: scroll;
+  background-color: var(--theme-color);
+  z-index: 2;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: 100%;
+}
+
+.actions {
+  text-align: end;
+}
