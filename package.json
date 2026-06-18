@@ -13,20 +13,43 @@
   "license": "ISC",
   "author": "andrey isaev",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:electron": "tsc",
+    "build:angular": "npm run build --prefix frontend",
+    "build": "npm run build:angular && npm run build:electron",
+    "dist": "npm run build && electron-builder --win portable",
     "start:electron": "npm run build:electron && cross-env NODE_ENV=development electron ./dist/main.js",
+    "start:prod": "npm run build && cross-env NODE_ENV=production electron ./dist/main.js",
     "start:angular": "cd frontend && npm start",
     "start": "concurrently \"npm run start:angular\" \"wait-on http://localhost:4200 && npm run start:electron\"",
     "test-tcp-server": "node test-tcp-server/main.js"
+  },
+  "build": {
+    "appId": "com.tcp-ip.app",
+    "productName": "TCP-IP",
+    "directories": {
+      "output": "release"
+    },
+    "files": ["dist/**/*", "package.json"],
+    "asar": true,
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@angular/cli": "^21.2.2",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron": "^41.0.2",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.9.3",
     "wait-on": "^9.0.4"
   },

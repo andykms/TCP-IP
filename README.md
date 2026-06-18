@@ -46,3 +46,20 @@ npm run start
 npm ci && cd frontend && npm ci && cd .. && npm run start
 ```
 
+## Сборка .exe (Windows)
+
+Один portable-файл без установщика:
+
+```bash
+npm ci && cd frontend && npm ci && cd ..
+npm run dist
+```
+
+Готовый файл: `release/TCP-IP 1.0.0.exe`
+
+Проверка production-сборки без упаковки:
+
+```bash
+npm run start:prod
+```
+

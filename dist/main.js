@@ -74,7 +74,7 @@ function createWindow() {
         mainWindow.webContents.openDevTools();
     }
     else {
-        mainWindow.loadFile(path.join(__dirname, "../dist/frontend/index.html"));
+        mainWindow.loadFile(path.join(__dirname, "frontend/browser/index.html"));
     }
     mainWindow.on("closed", () => {
         mainWindow = null;
