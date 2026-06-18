@@ -29,6 +29,7 @@ import { type DropdownListItem } from '../../shared/features/dropdown-list-item.
 
 export type MessageStatus = 'failed' | 'sended' | 'pending' | null;
 export type SendMessageMode = 'client' | 'server';
+export type UiMessageMode = 'extended' | 'minimal';
 
 @Component({
   selector: 'hercules-send-message',
@@ -55,6 +56,7 @@ export class SendMessageComponent implements OnChanges {
   public connections = input<TcpConnectionInfo[]>([]);
   protected submitSend = output<SendMessage>();
   public messageStatus = input<MessageStatus>(null);
+  public uiMode = input<UiMessageMode>('extended');
 
   protected readonly connectionOptions = computed<DropdownListItem[]>(() =>
     this.connections().map((connection, index) => ({

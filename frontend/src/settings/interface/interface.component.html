@@ -1,0 +1,29 @@
+<section class="interface">
+  <span herculesText texttype="sub" size="medium" class="section-title">Тема</span>
+  <div class="theme-buttons">
+    <button
+      type="button"
+      herculesToggleButton
+      [active]="theme() === 'dark'"
+      (click)="setTheme('dark')"
+    >
+      Темная
+    </button>
+    <button
+      type="button"
+      herculesToggleButton
+      [active]="theme() === 'light'"
+      (click)="setTheme('light')"
+    >
+      Светлая
+    </button>
+    <button
+      type="button"
+      herculesToggleButton
+      [active]="theme() === 'system'"
+      (click)="setTheme('system')"
+    >
+      Системная
+    </button>
+  </div>
+</section>

@@ -85,7 +85,7 @@
   position: absolute;
   left: 0;
   inline-size: 100%;
-  block-size: calc(100% - 100px);
+  block-size: calc(100% - 200px);
   overflow-y: scroll;
   background-color: var(--theme-color);
   z-index: 2;
@@ -94,6 +94,11 @@
 .empty-fill-table {
   inline-size: 100%;
   block-size: 50px;
+}
+
+.send-message-container {
+  inline-size: 100%;
+  padding-inline: 30px;
 }
 
 @media (width <= 580px) {

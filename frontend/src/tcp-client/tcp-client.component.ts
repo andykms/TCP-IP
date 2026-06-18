@@ -13,7 +13,7 @@ import { TcpData } from '../tcp/features/tcp-data.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataCenterComponent } from '../data-center/data-center.component';
 import { SendMessage } from '../data-center/features/send-message.model';
-import { catchError, distinctUntilChanged, EMPTY } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { MessageStatus } from '../data-center/send-message/send-message.component';
 
 @Component({
@@ -72,14 +72,13 @@ export class TcpClientComponent implements OnInit {
     this.tcpService
       .send(message.connectionId!, message.data, message.format)
       .pipe(
-        distinctUntilChanged(),
         catchError(() => {
           this.messageStatus.set('failed');
           return EMPTY;
         }),
       )
       .subscribe(({ success }) => {
-        if (success) this.messageStatus.set('sended');
+        this.messageStatus.set(success ? 'sended' : 'failed');
       });
   }
 }

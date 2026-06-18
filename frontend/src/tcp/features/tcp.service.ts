@@ -193,9 +193,13 @@ export class TcpService {
           host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
           port: this.connections.get(connectionId)?.port ?? -1,
         });
-        return EMPTY;
+        return of({ success: false });
       }),
-      tap(() => {
+      tap((result) => {
+        if (!result.success) {
+          return;
+        }
+
         this.dataSubject.next({
           connectionId,
           data: `Сообщение: "${data}" отправлено успешно`,

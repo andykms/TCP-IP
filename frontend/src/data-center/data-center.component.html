@@ -9,7 +9,15 @@
       [ips]="ips()"
       [ports]="ports()"
       [connectionIds]="connectionIds()"
-    ></hercules-messages>
+    >
+      <hercules-send-message
+        [mode]="mode()"
+        [connections]="connections()"
+        (submitSend)="onSendMessage($event)"
+        [messageStatus]="messageStatus()"
+        uiMode="minimal"
+      ></hercules-send-message>
+    </hercules-messages>
   </div>
   <div
     [style]="{ display: activeTab() === sendMessageTab ? 'block' : 'none', 'block-size': '100%' }"

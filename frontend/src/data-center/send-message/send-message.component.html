@@ -1,4 +1,10 @@
-<form class="form" (ngSubmit)="onSubmit()" [formGroup]="form">
+<form
+  class="form"
+  [class.minimal]="uiMode() === 'minimal'"
+  [class.extended]="uiMode() === 'extended'"
+  (ngSubmit)="onSubmit()"
+  [formGroup]="form"
+>
   @if (mode() !== 'server') {
     <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
     <label
@@ -82,7 +88,13 @@
       <input name="format" formControlName="format" class="pseudo-input" />
     </div>
     @if (!(messageStatus() == 'pending')) {
-      <button herculesButton buttonType="primary" [disabled]="form.invalid" type="submit">
+      <button
+        [size]="uiMode() === 'minimal' ? 'small' : 'medium'"
+        herculesButton
+        buttonType="primary"
+        [disabled]="form.invalid"
+        type="submit"
+      >
         Отправить
       </button>
     } @else {
