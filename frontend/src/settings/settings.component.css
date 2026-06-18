@@ -1,0 +1,35 @@
+.settings {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: calc(100vh - 54px);
+  padding-inline: 30px;
+}
+
+.sidebar {
+  flex-shrink: 0;
+  padding-inline-end: 24px;
+  border-inline-end: 1px solid var(--subtext-color);
+  min-inline-size: 180px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block-start: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+}
+
+.nav-link-active {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.content {
+  flex: 1;
+  padding-inline-start: 24px;
+  padding-block-start: 20px;
+}

@@ -1,0 +1,1 @@
+import"./chunk-2NFLSA4Y.js";var e=[{path:"",redirectTo:"interface",pathMatch:"full"},{path:"interface",loadComponent:()=>import("./chunk-VBNEQLER.js").then(t=>t.InterfaceComponent)}];export{e as settingsRoutes};

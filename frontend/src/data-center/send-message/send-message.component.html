@@ -1,40 +1,104 @@
-<form class="form" (ngSubmit)="onSubmit()" [formGroup]="form">
-  <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
-  <label herculesInputContainer size="small" placeholder="id подключения:" class="connection-id" [inputType]="connectionIdType">
-    <span herculesText texttype="sub" size="small">iD:</span>
-    <input name="connectionId" formControlName="connectionId" maxlength="16" />
-    <hercules-hint-dropdown
-      [value]="connectionIdValue"
-      [variables]="connections()"
-      (onChoose)="onChooseConnection($event)"
-    ></hercules-hint-dropdown>
-  </label>
-  <label
-    herculesTextfieldContainer
-    size="medium"
-    placeholderTop="Напишите сообщение прямо тут!"
-    class="message-area"
-    resize="none"
-  >
-    <textarea name="data" formControlName="data"></textarea>
-  </label>
+<form
+  class="form"
+  [class.minimal]="uiMode() === 'minimal'"
+  [class.extended]="uiMode() === 'extended'"
+  (ngSubmit)="onSubmit()"
+  [formGroup]="form"
+>
+  @if (mode() !== 'server') {
+    <span herculesText texttype="sub" size="small" class="sender-hint">Получатель</span>
+    <label
+      herculesInputContainer
+      size="small"
+      placeholder="id подключения:"
+      class="connection-id"
+      [inputType]="connectionIdType"
+    >
+      <span herculesText texttype="sub" size="small">iD:</span>
+      <input name="connectionId" formControlName="connectionId" maxlength="16" />
+      <hercules-list-dropdown
+        [value]="connectionIdValue"
+        [items]="connectionOptions()"
+        (onChoose)="onChooseConnection($event)"
+      ></hercules-list-dropdown>
+    </label>
+  }
+  <div class="fields">
+    <label
+      herculesTextfieldContainer
+      size="medium"
+      placeholderTop="Напишите сообщение прямо тут!"
+      class="message-area"
+      resize="none"
+    >
+      <span herculesText texttype="sub" size="small">{{ `utf-8, ${dataLength} символов` }}</span>
+      <textarea name="data" formControlName="data"></textarea>
+    </label>
+    @if (isChoosenFormatHex) {
+      <label
+        herculesTextfieldContainer
+        size="medium"
+        placeholderTop=""
+        class="message-area formated-area"
+        resize="none"
+        [disabled]="true"
+        placeholderTop="Здесь сообщение в hex формате"
+      >
+        <span herculesText texttype="sub" size="small">hex</span>
+        <textarea name="data-hex" [value]="dataHex" [disabled]="true"></textarea>
+      </label>
+    }
+    @if (isChoosenFormatAscii) {
+      <label
+        herculesTextfieldContainer
+        size="medium"
+        placeholderTop=""
+        class="message-area formated-area"
+        resize="none"
+        [disabled]="true"
+        placeholderTop="Здесь сообщение в ascii формате"
+      >
+        <span herculesText texttype="sub" size="small">ascii</span>
+        <textarea name="data-ascii" [value]="dataAscii" [disabled]="true"></textarea>
+      </label>
+    }
+  </div>
   <div class="options">
     <div class="formats">
       <div>
-        <button herculesToggleButton [active]="isToggleHexActive" (click)="onClickSetHex()">
+        <button
+          type="button"
+          herculesToggleButton
+          [active]="isToggleHexActive"
+          (click)="onClickSetHex()"
+        >
           HEX формат
         </button>
-        <input type="checkbox" name="format" formControlName="format" class="pseudo-input" />
       </div>
       <div>
-        <button herculesToggleButton [active]="isToggleAsciiActive" (click)="onClickSetAscii()">
+        <button
+          type="button"
+          herculesToggleButton
+          [active]="isToggleAsciiActive"
+          (click)="onClickSetAscii()"
+        >
           ASCII формат
         </button>
-        <input type="checkbox" name="format" formControlName="format" class="pseudo-input" />
       </div>
+      <input name="format" formControlName="format" class="pseudo-input" />
     </div>
-    <button herculesButton buttonType="primary" [disabled]="form.invalid" type="submit">
-      Отправить
-    </button>
+    @if (!(messageStatus() == 'pending')) {
+      <button
+        [size]="uiMode() === 'minimal' ? 'small' : 'medium'"
+        herculesButton
+        buttonType="primary"
+        [disabled]="form.invalid"
+        type="submit"
+      >
+        Отправить
+      </button>
+    } @else {
+      <hercules-loader></hercules-loader>
+    }
   </div>
 </form>

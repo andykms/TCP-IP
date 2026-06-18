@@ -1,0 +1,97 @@
+<section class="device-search">
+  <div class="main-form">
+    <div class="search-panel" herculesBorderedContainer>
+      <div class="search-controls">
+        <label class="ip-filter-input" herculesInputContainer size="small">
+          <span herculesText texttype="sub" size="small">IP:</span>
+          <input
+            name="ipFilter"
+            [(ngModel)]="ipFilterValue"
+            placeholder="IP адрес"
+            [disabled]="isSearching() || status() === 'connected' || status() === 'loading'"
+          />
+        </label>
+        <button
+          type="button"
+          herculesButton
+          buttonType="secondary"
+          size="small"
+          [disabled]="isSearching() || status() === 'connected' || status() === 'loading'"
+          (click)="onFind()"
+        >
+          <span>Найти</span>
+        </button>
+        <button
+          type="button"
+          herculesButton
+          buttonType="secondary"
+          size="small"
+          [disabled]="isSearching() || status() === 'connected' || status() === 'loading'"
+          (click)="onRefresh()"
+        >
+          <span>Обновить</span>
+        </button>
+      </div>
+      <div class="table-wrapper">
+        @if (isSearching()) {
+          <div class="search-loader">
+            <hercules-loader></hercules-loader>
+          </div>
+        } @else {
+          <table herculesTable>
+            <thead>
+              <tr>
+                <th><span herculesText texttype="sub" size="small">ip</span></th>
+                <th><span herculesText texttype="sub" size="small">порт</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (device of filteredDevices(); track device.ip + ':' + device.port) {
+                <tr [class.selected-row]="isSelected(device)" (click)="onSelectDevice(device)">
+                  <td>
+                    <span herculesText size="medium">{{ device.ip }}</span>
+                  </td>
+                  <td>
+                    <span herculesText size="medium">{{ device.port }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </div>
+    <div class="connect-actions">
+      <button
+        type="button"
+        herculesButton
+        [buttonType]="buttonType()"
+        [disabled]="isConnectDisabled()"
+        (click)="onSubmitConnect()"
+      >
+        @if (status() === 'connected') {
+          <span>Подключено</span>
+        } @else if (status() === 'loading') {
+          <hercules-loader></hercules-loader>
+        } @else {
+          <span>Подключиться</span>
+        }
+      </button>
+      @if (status() === 'connected') {
+        <button herculesButton buttonType="tertiary" (click)="onSubmitDisconnect()">
+          <span herculesText size="medium" texttype="danger" [hovered]="true">Отключиться</span>
+        </button>
+      }
+    </div>
+  </div>
+  @if (status() === 'connected') {
+    <div class="options">
+      <button herculesButton buttonType="secondary" size="medium">Сохранить конфигурацию</button>
+      @if (canAddConfiguration()) {
+        <button herculesButton buttonType="secondary" size="medium" (click)="onAddConfiguration()">
+          Добавить подключение
+        </button>
+      }
+    </div>
+  }
+</section>

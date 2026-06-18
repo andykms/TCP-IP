@@ -3,6 +3,7 @@
     [canRemoveConfiguration]="$index > 0"
     (addConfiguration)="onAddConfiguration()"
     (removeConfiguration)="onRemoveConfiguration()"
+    [canAddConfiguration]="$index >= configurations().length - 1"
   >
   </hercules-tcp-client-configuration>
 }
@@ -11,5 +12,6 @@
   [ips]="ips()"
   [ports]="ports()"
   [connectionIds]="connectionIds()"
-  (sendMessage)="sendMessage($event)"
+  (sendMessage)="onSendMessage($event)"
+  [messageStatus]="messageStatus()"
 ></hercules-data-center>

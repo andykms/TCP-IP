@@ -12,6 +12,7 @@ import { HercTextDirective } from '../../shared/directives/text.directive';
 import { HerculesDropdownContentComponent } from '../../shared/ui/dropdown-content/dropdown-content.component';
 import { type ManualSettingData as TConnectOptions } from '../features/manual-setting-data.model';
 import { type TManualSettingStatus } from '../tcp-client-configuration/tcp-client-configuration.component';
+import { HercLoaderComponent } from '../../shared/ui/loader/loader.component';
 
 @Component({
   selector: 'hercules-manual-setting',
@@ -24,6 +25,7 @@ import { type TManualSettingStatus } from '../tcp-client-configuration/tcp-clien
     HercButtonDirective,
     HercTextDirective,
     HerculesDropdownContentComponent,
+    HercLoaderComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +34,7 @@ export class ManualSettingComponent {
   protected readonly connect = output<TConnectOptions>();
   protected readonly disconnect = output<void>();
   protected readonly addConfiguration = output<void>();
+  public readonly canAddConfiguration = input<boolean>(false);
 
   protected readonly settingForm: FormGroup;
   protected readonly authCodeForm: FormGroup;

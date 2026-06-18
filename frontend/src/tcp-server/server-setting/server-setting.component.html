@@ -1,0 +1,122 @@
+<section class="server-setting configuration">
+  <div class="header">
+    <span herculesText [texttype]="'sub'" size="medium" class="header">{{ tcpLabel }}</span>
+  </div>
+  <div class="main-form">
+    <form class="tcp-form" (ngSubmit)="onSubmitOpen()" [formGroup]="settingForm">
+      <div [class]="tcpLabelClasses">
+        <span herculesText [texttype]="status() === 'opened' ? 'ok' : 'primary'" size="medium"
+          >TCP</span
+        >
+      </div>
+      <label
+        class="port-input"
+        herculesInputContainer
+        size="medium"
+        placeholder="Порт:"
+        [disabled]="isDisabled"
+      >
+        <span herculesText texttype="sub" size="medium">Порт:</span>
+        <input name="port" formControlName="port" minlength="1" maxlength="5" />
+      </label>
+      <button
+        type="submit"
+        herculesButton
+        [buttonType]="buttonType()"
+        [disabled]="isButtonDisabled"
+      >
+        @if (status() === 'opened') {
+          <span>Открыт</span>
+        } @else if (status() === 'loading') {
+          <hercules-loader></hercules-loader>
+        } @else {
+          <span>Открыть</span>
+        }
+      </button>
+    </form>
+    @if (status() === 'opened') {
+      <button herculesButton buttonType="tertiary" (click)="onSubmitClose()">
+        <span herculesText size="medium" texttype="danger" [hovered]="true">Закрыть</span>
+      </button>
+    }
+  </div>
+
+  @if (status() === 'opened') {
+    <div class="clients-panel" herculesBorderedContainer>
+      <div class="search-controls">
+        <label class="search-input" herculesInputContainer size="small">
+          <span herculesText texttype="sub" size="small">Поиск:</span>
+          <input name="search" [(ngModel)]="searchValue" [ngModelOptions]="{ standalone: true }" />
+        </label>
+        <button type="button" herculesButton buttonType="secondary" size="small" (click)="onFind()">
+          <span>Найти</span>
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table herculesTable>
+          <thead>
+            <tr>
+              <th><span herculesText texttype="sub" size="medium">ip</span></th>
+              <th><span herculesText texttype="sub" size="medium">порт</span></th>
+              <th><span herculesText texttype="sub" size="medium">Время подключения</span></th>
+              <th><span herculesText texttype="sub" size="medium">Байт</span></th>
+              <th><span herculesText texttype="sub" size="medium">статус</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (client of filteredClients(); track client.clientId) {
+              <tr>
+                <td>
+                  <span herculesText size="medium">{{ client.ip }}</span>
+                </td>
+                <td>
+                  <span herculesText size="medium">{{ client.port }}</span>
+                </td>
+                <td>
+                  <span herculesText size="medium">{{ formatDate(client.connectedAt) }}</span>
+                </td>
+                <td>
+                  <span herculesText size="medium">{{ client.bytesReceived }}</span>
+                </td>
+                <td>
+                  <span herculesText size="medium" [texttype]="statusTextType(client.status)">{{
+                    statusLabel(client.status)
+                  }}</span>
+                </td>
+                <td class="actions">
+                  @if (client.status === 'connected') {
+                    <button
+                      type="button"
+                      herculesButton
+                      buttonType="tertiary"
+                      size="small"
+                      (click)="onDisconnectClient(client.clientId)"
+                    >
+                      <span herculesText size="medium" texttype="danger" [hovered]="true"
+                        >Отключить</span
+                      >
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (canAddServer()) {
+      <div class="options">
+        <button herculesButton buttonType="secondary" size="medium" (click)="onAddServer()">
+          Добавить сервер
+        </button>
+      </div>
+    }
+  }
+  @if (canRemoveServer()) {
+    <button herculesButton buttonType="tertiary" (click)="onRemoveServer()">
+      <img src="/images/close.svg" class="close" />
+    </button>
+  }
+</section>

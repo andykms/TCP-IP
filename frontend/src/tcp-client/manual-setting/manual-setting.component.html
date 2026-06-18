@@ -35,11 +35,7 @@
         @if (status() === 'connected') {
           <span>Подключено</span>
         } @else if (status() === 'loading') {
-          <div class="loader">
-            <span class="load load1"></span>
-            <span class="load load2"></span>
-            <span class="load load3"></span>
-          </div>
+          <hercules-loader></hercules-loader>
         } @else {
           <span>Подключиться</span>
         }
@@ -51,6 +47,7 @@
       </button>
     }
   </div>
+  <!--
   @if (status() === null) {
     <div>
       <hercules-dropdown-content title="Код авторизации">
@@ -62,13 +59,15 @@
         </form>
       </hercules-dropdown-content>
     </div>
-  }
+  }-->
   @if (status() === 'connected') {
     <div class="options">
       <button herculesButton buttonType="secondary" size="medium">Сохранить конфигурацию</button>
-      <button herculesButton buttonType="secondary" size="medium" (click)="onAddConfiguration()">
-        Добавить подключение
-      </button>
+      @if (canAddConfiguration()) {
+        <button herculesButton buttonType="secondary" size="medium" (click)="onAddConfiguration()">
+          Добавить подключение
+        </button>
+      }
     </div>
   }
 </section>

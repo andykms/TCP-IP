@@ -8,6 +8,8 @@ type CloseListener = (hadError: boolean) => void;
 export class TcpConnectionService {
   private socket: net.Socket;
   public id: string;
+  public host = "";
+  public port = 0;
   private dataListeners: DataListener[] = [];
   private errorListeners: ErrorListener[] = [];
   private closeListeners: CloseListener[] = [];
@@ -34,7 +36,9 @@ export class TcpConnectionService {
     return this;
   }
 
-  connect(port: number, host: string, listener: ()=>void) {
+  connect(port: number, host: string, listener: () => void) {
+    this.host = host;
+    this.port = port;
     this.socket.connect(port, host, listener);
   }
   

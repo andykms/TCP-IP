@@ -73,15 +73,27 @@ class TcpClientService {
     }
     disconnect(connectionId) {
         if (this.connections.has(connectionId)) {
-            this.connections.get(connectionId).disconnect();
+            const connection = this.connections.get(connectionId);
+            // Important: remove from Map immediately. TcpConnectionService.disconnect()
+            // clears listeners before the socket 'close' event fires, so relying on
+            // close listeners to delete from this Map is not safe.
+            this.connections.delete(connectionId);
+            connection.disconnect();
             return { success: true };
         }
+    }
+    getConnections() {
+        return Array.from(this.connections.entries()).map(([connectionId, connection]) => ({
+            connectionId,
+            ip: connection.host,
+            port: connection.port,
+        }));
     }
     async sendData(connectionId, data, format = format_model_1.Format.UTF_8) {
         const connection = this.connections.get(connectionId);
         const buffer = Buffer.from(data, format);
         if (!connection) {
-            throw new Error("Система: подключение не найдено");
+            return Promise.reject(new Error("Система: подключение не найдено"));
         }
         const successfully = connection.getUnsafedSocket.write(buffer);
         if (successfully)
@@ -92,7 +104,7 @@ class TcpClientService {
     async sendFile(connectionId, filePath) {
         const connection = this.connections.get(connectionId);
         if (!connection) {
-            throw new Error("Система: подключение не найдено");
+            return Promise.reject(new Error("Система: подключение не найдено"));
         }
         try {
             const stats = await fs.promises.stat(filePath);
@@ -106,10 +118,10 @@ class TcpClientService {
             connection.getUnsafedSocket.write(header);
             const readStream = fs.createReadStream(filePath);
             await (0, promises_1.pipeline)(readStream, connection.getUnsafedSocket, { end: false });
-            return { success: true, fileName, fileSize };
+            return Promise.resolve({ success: true, fileName, fileSize });
         }
         catch (err) {
-            throw err;
+            return Promise.reject(err);
         }
     }
 }

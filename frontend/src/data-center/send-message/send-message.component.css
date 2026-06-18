@@ -1,22 +1,63 @@
-.form {
+.extended {
   padding: 10px 30px;
   background-color: var(--theme-color);
   block-size: 100%;
+  z-index: 1;
 }
 
-.connection-id {
+.minimal {
+  padding-inline: 30px;
+  inline-size: 100%;
+  block-size: auto;
+  background-color: var(--theme-color);
+  border-block-end: 1px solid var(--separator-color);
+  padding-block-end: 3px;
+  z-index: 1;
+}
+
+.extended .connection-id {
   position: relative;
-  inline-size: 90px;
+  inline-size: 220px;
   margin-block-end: 12px;
+  z-index: 3;
+}
+
+.minimal .connection-id {
+  position: relative;
+  inline-size: 180px;
 }
 
 .message-area {
   display: block;
   inline-size: 100%;
-  block-size: calc(100% - 120px);
+  block-size: 100%;
   background-color: var(--theme-color);
   z-index: 2;
-  margin-block-end: 12px;
+}
+
+.formated-area {
+  inline-size: 25%;
+}
+
+.extended .fields {
+  display: block;
+  inline-size: 100%;
+  block-size: calc(100% - 150px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 20px;
+  gap: 12px;
+}
+
+.minimal .fields {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .pseudo-input {

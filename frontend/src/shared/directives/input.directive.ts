@@ -1,4 +1,13 @@
-import { Directive, effect, ElementRef, input, OnChanges, OnInit, Renderer2, SimpleChanges } from '@angular/core';
+import {
+  Directive,
+  effect,
+  ElementRef,
+  input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+} from '@angular/core';
 
 export type HercInputType = 'base' | 'danger';
 @Directive({

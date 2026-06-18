@@ -9,24 +9,53 @@ import {
   merge,
   of,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
 import { type TcpData, TcpDataType } from './tcp-data.model';
 import { type Tcp } from './tcp.model';
 import { MessageFormat } from './message-format.model';
+import { LoadingService } from '../../loading/features/loading.service';
 
 declare global {
   interface Window {
     electronAPI: {
       connect: (connectionId: string, host: string, port: number) => Promise<any>;
-      send: (connectionId: string, data: string, format: MessageFormat) => Promise<any>;
+      send: (
+        connectionId: string,
+        data: string,
+        format: MessageFormat,
+      ) => Promise<{ success: boolean }>;
       sendFile: (connectionId: string, filePath: string) => Promise<any>;
       disconnect: (connectionId: string) => Promise<any>;
+      getConnections: () => Promise<{ connectionId: string; ip: string; port: number }[]>;
       openFileDialog: () => Promise<{ name: string; path: string; size: number }>;
       onData: (callback: (connectionId: string, data: string) => void) => void;
       onError: (callback: (connectionId: string, error: string) => void) => void;
       onClose: (callback: (connectionId: string) => void) => void;
       removeAllListeners: () => void;
+      searchDevices: () => Promise<{ ip: string; port: number }[]>;
+      openServer: (serverId: string, port: number) => Promise<{ success: boolean }>;
+      closeServer: (serverId: string) => Promise<{ success: boolean }>;
+      disconnectServerClient: (serverId: string, clientId: string) => Promise<{ success: boolean }>;
+      sendToAllServerClients: (
+        data: string,
+        format: MessageFormat,
+      ) => Promise<{ success: boolean; sentCount: number }>;
+      onServerClientsChanged: (
+        callback: (
+          serverId: string,
+          clients: {
+            clientId: string;
+            ip: string;
+            port: number;
+            connectedAt: string;
+            bytesReceived: number;
+            status: 'connected' | 'disconnected';
+          }[],
+        ) => void,
+      ) => void;
+      onServerData: (callback: (serverId: string, clientId: string, data: string) => void) => void;
     };
   }
 }
@@ -140,10 +169,9 @@ export class TcpService {
       port: number;
       status: TcpDataType;
     }>((observer) => {
-      this.dataSubject.subscribe((data) => {
-        if (data.connectionId === connectionId && data.type === TcpDataType.DISCONNECT) {
+      window.electronAPI.onClose((closedConnectionId: string) => {
+        if (closedConnectionId === connectionId)
           observer.next({ connectionId, host, port, status: TcpDataType.DISCONNECT });
-        }
       });
     });
 
@@ -154,7 +182,7 @@ export class TcpService {
     connectionId: string,
     data: string,
     format: MessageFormat = MessageFormat.UTF_8,
-  ): Observable<void> {
+  ): Observable<{ success: boolean }> {
     return from(window.electronAPI.send(connectionId, data, format)).pipe(
       catchError((error) => {
         this.dataSubject.next({
@@ -165,9 +193,13 @@ export class TcpService {
           host: this.connections.get(connectionId)?.host ?? 'неизвестный хост',
           port: this.connections.get(connectionId)?.port ?? -1,
         });
-        return throwError(error);
+        return of({ success: false });
       }),
-      finalize(() => {
+      tap((result) => {
+        if (!result.success) {
+          return;
+        }
+
         this.dataSubject.next({
           connectionId,
           data: `Сообщение: "${data}" отправлено успешно`,
@@ -181,8 +213,17 @@ export class TcpService {
   }
 
   disconnect(connectionId: string): Observable<void> {
-    const disconnectObservable = from(window.electronAPI.disconnect(connectionId));
-    return disconnectObservable;
+    return from(window.electronAPI.disconnect(connectionId)).pipe(
+      tap(() => this.connections.delete(connectionId)),
+    );
+  }
+
+  getConnections(): Observable<{ connectionId: string; ip: string; port: number }[]> {
+    if (!window.electronAPI?.getConnections) {
+      return of([]);
+    }
+
+    return from(window.electronAPI.getConnections());
   }
 
   getData(): Observable<TcpData> {

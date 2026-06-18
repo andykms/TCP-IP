@@ -1,0 +1,24 @@
+@for (serverId of serverIds(); track serverId; let index = $index) {
+  <hercules-server-setting
+    [status]="getServerStatus(serverId)"
+    [clients]="getServerClients(serverId)"
+    [canAddServer]="serverId === serverIds()[serverIds().length - 1]"
+    [canRemoveServer]="index > 0"
+    (open)="onOpenServer(serverId, $event)"
+    (close)="onCloseServer(serverId)"
+    (disconnectClient)="onDisconnectClient(serverId, $event)"
+    (addServer)="onAddServer()"
+    (removeServer)="onRemoveServer(serverId)"
+  ></hercules-server-setting>
+}
+<hercules-data-center
+  mode="server"
+  [messages]="messages()"
+  [ips]="ips()"
+  [ports]="ports()"
+  [connectionIds]="connectionIds()"
+  [serverConnections]="allServerConnections()"
+  (sendMessage)="onSendMessage($event)"
+  (disconnectServerClient)="onDisconnectServerClient($event)"
+  [messageStatus]="messageStatus()"
+></hercules-data-center>

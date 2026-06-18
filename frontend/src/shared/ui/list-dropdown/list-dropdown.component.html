@@ -1,0 +1,17 @@
+<div class="arrow">
+  <hercules-arrow-button
+    type="main"
+    size="small"
+    [orientation]="opened() ? 'up' : 'down'"
+    (onClick)="toggle()"
+  ></hercules-arrow-button>
+</div>
+@if (opened() && currentItems().length > 0) {
+  <ul class="dropdown">
+    @for (item of currentItems(); track item.id) {
+      <li (click)="choose(item)" class="dropdown-element">
+        <span herculesText texttype="main" [size]="size()">{{ item.label }}</span>
+      </li>
+    }
+  </ul>
+}

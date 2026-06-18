@@ -46,6 +46,7 @@ export class TcpClientConfigurationComponent {
   protected readonly addConfiguration = output<void>();
   protected readonly removeConfiguration = output<void>();
   public readonly canRemoveConfiguration = input<boolean>(false);
+  public readonly canAddConfiguration = input<boolean>(false);
   public readonly connectionId = signal<string>('');
   protected readonly activeTab = signal<TcpClientConfigurationTab>(
     TcpClientConfigurationTab.MANUAL_SETTING,
@@ -93,6 +94,9 @@ export class TcpClientConfigurationComponent {
           this.status.set('connected');
         }
         if (status === TcpDataType.DISCONNECT) {
+          this.status.set(null);
+        }
+        if (status === TcpDataType.ERROR) {
           this.status.set(null);
         }
         this.connectionId.set(connectionId);

@@ -1,0 +1,15 @@
+.interface {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title {
+  display: block;
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
